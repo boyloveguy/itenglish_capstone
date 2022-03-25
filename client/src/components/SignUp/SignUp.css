@@ -1,0 +1,28 @@
+body, html {
+    height: 100%;
+    margin: 0;
+}
+#root, #root>div{
+    height: 100%;
+}
+.div-sign-up{
+    background-image: url("/images/sign-up-background.jpg")!important;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+}
+.sign-up-container{
+    background: white;
+    border: 0px;
+    border-radius: 7px;
+    width: 60%;
+    height: fit-content;
+    position: absolute;
+    margin: auto;
+    top: 100px;
+    bottom: 100px;
+    left: 0;
+    right: 0;
+    padding: 30px;
+}

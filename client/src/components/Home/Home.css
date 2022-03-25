@@ -1,0 +1,27 @@
+.carousel-caption{
+    width: inherit;
+    padding: 100px 0 100px 0!important;
+}
+.pad-top-50{
+    padding-top: 50px;
+}
+.pad-top-70{
+    padding-top: 70px;
+}
+.pad-bot-10{
+    padding-bottom: 10px;
+}
+.pad-top-100{
+    padding-top: 100px;
+}
+.pad-bot-50{
+    padding-bottom: 50px;
+}
+.btn-go{
+    width: 100px;
+}
+.gg-map{
+    width: 100%;
+    height: 450px;
+    border: 0;
+}
