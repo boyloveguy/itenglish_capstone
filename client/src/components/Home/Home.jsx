@@ -152,14 +152,14 @@ class Home extends Component {
                     />
                     <Row className='pad-top-50'>                        
                         <Col sm={7}>
-                            <iframe className='gg-map' loading="lazy" allowfullscreen src="https://www.google.com/maps/embed/v1/place?q=254+Nguyễn+Văn+Linh,+Thạc+Gián,+Thanh+Khê,+Đà+Nẵng+550000,+Việt+Nam&key=AIzaSyAYf80GEP62ehWfth8u9IarLq3Jp4lb-50"></iframe><br />
+                            <iframe className='gg-map' loading="lazy" allowFullscreen src="https://www.google.com/maps/embed/v1/place?q=254+Nguyễn+Văn+Linh,+Thạc+Gián,+Thanh+Khê,+Đà+Nẵng+550000,+Việt+Nam&key=AIzaSyAYf80GEP62ehWfth8u9IarLq3Jp4lb-50"></iframe><br />
                         </Col>                        
                         <Col sm={5} className='pad-top-100'>
                             <h3>Contact us</h3>
                             <p>Contact us and we'll get back to you within 24 hours.</p>
-                            <p><i class="map marker alternate icon"></i>254 Nguyen Van Linh, Da Nang, Viet Nam</p>
-                            <p><i class="phone icon"></i>(+84) 0123456789</p>                            
-                            <p><i class="envelope icon"></i>itenglish@gmail.com</p>
+                            <p><i className="map marker alternate icon"></i>254 Nguyen Van Linh, Da Nang, Viet Nam</p>
+                            <p><i className="phone icon"></i>(+84) 0123456789</p>                            
+                            <p><i className="envelope icon"></i>itenglish@gmail.com</p>
                         </Col>
                     </Row>
                     <hr
