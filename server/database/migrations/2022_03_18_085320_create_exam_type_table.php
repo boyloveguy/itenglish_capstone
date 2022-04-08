@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('it_type', function (Blueprint $table) {
-            $table->increments('it_type_id');
-            $table->string('type_name', 50)->unique();
+        Schema::create('exam_type', function (Blueprint $table) {
+            $table->increments('type_id');
+            $table->string('type_name', 50);
             $table->string('type_desc', 1000)->nullable();;
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('it_type');
+        Schema::dropIfExists('exam_type');
     }
 };

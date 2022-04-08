@@ -8,11 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Question extends Model
 {
     protected $table    = 'question';
-    protected $fillable =   ['ques_id', 
-                            'ques_name', 
-                            'ques_desc', 
-                            'ques_point', 
-                            'exam_is',
+    protected $fillable =   ['ques_id',
+                            'exam_id',
+                            'ques_point',
                             'cre_date', 
                             'cre_user',
                             'upd_date',

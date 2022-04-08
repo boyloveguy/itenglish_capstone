@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('user', function (Blueprint $table) {
             $table->increments('user_id');
             $table->string('user_name', 50)->unique();
-            $table->string('user_fname', 50);
-            $table->string('user_lname', 50);
+            $table->string('user_fname', 50)->nullable();
+            $table->string('user_lname', 50)->nullable();
             $table->string('user_password');
             $table->date('user_birthday')->nullable();
             $table->string('user_avatar')->nullable()->default('avatar_default.jpg');

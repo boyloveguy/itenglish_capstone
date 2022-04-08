@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Passport\HasApiTokens;
 
 class Users extends Model
 {
@@ -17,5 +18,6 @@ class Users extends Model
                             'user_avatar',
                             'role_id',
                             'email'];
-    protected $hidden = ['user_password'];
+    protected $hidden   = ['user_password'];
+    public $timestamps  = false;
 }

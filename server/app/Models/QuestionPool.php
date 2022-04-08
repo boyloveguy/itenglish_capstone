@@ -5,14 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Exam extends Model
+class QuestionPool extends Model
 {
-    protected $table    = 'exam';
-    protected $fillable =   ['exam_id', 
-                            'exam_name', 
-                            'it_type_id', 
-                            'exam_desc',
-                            'type_id', 
+    protected $table    = 'question_pool';
+    protected $fillable =   ['ques_id',
+                            'ques_text', 
+                            'ques_image',
                             'cre_date', 
                             'cre_user',
                             'upd_date',

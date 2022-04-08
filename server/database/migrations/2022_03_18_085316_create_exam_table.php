@@ -17,11 +17,13 @@ return new class extends Migration
             $table->increments('exam_id');
             $table->string('exam_name', 200);
             $table->integer('it_type_id')->unsigned();
-            $table->string('exam_desc', 1000);
+            $table->string('exam_desc', 1000)->nullable();
+            $table->string('type_id')->unsigned();
             $table->dateTimeTz('cre_date', $precision = 0);
             $table->integer('cre_user')->unsigned();
-            $table->dateTimeTz('upd_date', $precision = 0);
-            $table->integer('upd_user')->unsigned();
+            $table->dateTimeTz('upd_date', $precision = 0)->nullable();
+            $table->integer('upd_user')->unsigned()->nullable();
+            $table->foreign('type_id')->references('type_id')->on('exam_type')->onUpdate('cascade');
             $table->foreign('it_type_id')->references('it_type_id')->on('it_type')->onUpdate('cascade');
             $table->foreign('cre_user')->references('user_id')->on('user')->onUpdate('cascade');
             $table->foreign('upd_user')->references('user_id')->on('user')->onUpdate('cascade');

@@ -18,10 +18,10 @@ return new class extends Migration
             $table->string('ans_desc', 1000);
             $table->integer('is_correct_ans');
             $table->integer('ques_id')->unsigned();
-            $table->dateTimeTz('cre_date', $precision = 0);
-            $table->integer('cre_user')->unsigned();
-            $table->dateTimeTz('upd_date', $precision = 0);
-            $table->integer('upd_user')->unsigned();
+            $table->dateTimeTz('cre_date', $precision = 0)->nullable();
+            $table->integer('cre_user')->unsigned()->nullable();
+            $table->dateTimeTz('upd_date', $precision = 0)->nullable();
+            $table->integer('upd_user')->unsigned()->nullable();
             $table->foreign('ques_id')->references('ques_id')->on('question')->onUpdate('cascade');
             $table->foreign('cre_user')->references('user_id')->on('user')->onUpdate('cascade');
             $table->foreign('upd_user')->references('user_id')->on('user')->onUpdate('cascade');

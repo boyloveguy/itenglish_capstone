@@ -3,9 +3,24 @@ import { Carousel, Container, Row, Col, Button } from 'react-bootstrap';
 import './Home.css';
 import MenuDiv from '../MenuDiv/MenuDiv';
 import { Helmet } from 'react-helmet';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 
 class Home extends Component {
-    state = { activeItem: 'home' }
+    constructor(props) {
+        super(props);
+
+        this.handleItemClick = this.handleItemClick.bind(this);
+
+        this.state = {
+            activeItem: 'home',
+            user_id: cookies.get('user_id'),
+            user_name: cookies.get('user_name'),
+            user_role: cookies.get('user_role')
+        };
+    }
+
     handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
     render() {
@@ -92,7 +107,7 @@ class Home extends Component {
                     </Row>
                 </Container>
                 <Container className='pad-top-50'>
-                    <Row>                        
+                    <Row>
                         <Col sm={7} className='pad-top-50'>
                             <h3>Join a classroom</h3>
                             <h4>We support users to open online teaching so that users in need can join a class. They can improve their specialized English for many different purposes.</h4>
@@ -126,7 +141,7 @@ class Home extends Component {
                     </Row>
                 </Container>
                 <Container className='pad-top-50 pad-bot-50'>
-                    <Row>                        
+                    <Row>
                         <Col sm={7} className='pad-top-50'>
                             <h3>Check your English</h3>
                             <h4>Try our quick, free online tests to find out what your level of English is. There are test suited for every level, and at the end, you will get recommendations on how to improve your English.</h4>
@@ -141,7 +156,7 @@ class Home extends Component {
                             />
                         </Col>
                     </Row>
-                </Container>                
+                </Container>
                 <Container className='pad-bot-10'>
                     <hr
                         style={{
@@ -150,15 +165,15 @@ class Home extends Component {
                             height: 1
                         }}
                     />
-                    <Row className='pad-top-50'>                        
+                    <Row className='pad-top-50'>
                         <Col sm={7}>
                             <iframe className='gg-map' loading="lazy" allowfullscreen src="https://www.google.com/maps/embed/v1/place?q=254+Nguyễn+Văn+Linh,+Thạc+Gián,+Thanh+Khê,+Đà+Nẵng+550000,+Việt+Nam&key=AIzaSyAYf80GEP62ehWfth8u9IarLq3Jp4lb-50"></iframe><br />
-                        </Col>                        
+                        </Col>
                         <Col sm={5} className='pad-top-100'>
                             <h3>Contact us</h3>
                             <p>Contact us and we'll get back to you within 24 hours.</p>
                             <p><i class="map marker alternate icon"></i>254 Nguyen Van Linh, Da Nang, Viet Nam</p>
-                            <p><i class="phone icon"></i>(+84) 0123456789</p>                            
+                            <p><i class="phone icon"></i>(+84) 0123456789</p>
                             <p><i class="envelope icon"></i>itenglish@gmail.com</p>
                         </Col>
                     </Row>
@@ -171,11 +186,13 @@ class Home extends Component {
                     />
                     <div
                         style={{
-                            textAlign: 'center'
+                            textAlign: 'center',
+                            paddingTop: 80,
+                            paddingBottom: 20
                         }}
                     >
                         <p>© ITEnglish Copyright 2022</p>
-                    </div>                    
+                    </div>
                 </Container>
             </div>
         )

@@ -13,17 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('question', function (Blueprint $table) {
-            $table->integer('ques_id')->unsigned();
-            $table->integer('exam_id')->unsigned();
-            $table->primary(['exam_id', 'user_id']);
-            $table->decimal('ques_point', $precision = 8, $scale = 2);
+        Schema::create('question_pool', function (Blueprint $table) {
+            $table->increments('ques_id');
+            $table->string('ques_text', 1000);
+            $table->string('ques_image', 1000)->nullable();
             $table->dateTimeTz('cre_date', $precision = 0)->nullable();
             $table->integer('cre_user')->unsigned()->nullable();
             $table->dateTimeTz('upd_date', $precision = 0)->nullable();
             $table->integer('upd_user')->unsigned()->nullable();
-            $table->foreign('exam_id')->references('exam_id')->on('exam')->onUpdate('cascade');
-            $table->foreign('ques_id')->references('ques_id')->on('question_pool')->onUpdate('cascade');
             $table->foreign('cre_user')->references('user_id')->on('user')->onUpdate('cascade');
             $table->foreign('upd_user')->references('user_id')->on('user')->onUpdate('cascade');
         });

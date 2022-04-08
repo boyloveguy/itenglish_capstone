@@ -26,3 +26,31 @@ body, html {
     right: 0;
     padding: 30px;
 }
+.btn-register{
+    background-color: #4d197c!important;
+    color: white!important;
+}
+.b_day, .b_day>i{
+    height: unset!important;
+}
+.clndr-control>div>button{
+    width: unset!important;
+    height: unset!important;
+}
+.b_day>i{
+    top: 19px!important;
+}
+#modal-sign-up{
+    height: auto!important;
+    top: auto!important;
+    left: auto!important;
+    bottom: auto!important;
+    right: auto!important;
+}
+#modal-sign-up>div>button>a{
+    text-decoration: none!important;
+    color: white;
+}
+#modal-sign-up>div>button{
+    background-color: #4d197c!important;;
+}
