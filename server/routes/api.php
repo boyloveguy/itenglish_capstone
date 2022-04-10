@@ -24,3 +24,6 @@ Route::post('/sign_up', [SignUpController::class, 'sign_up']);
 Route::get('/get_roles', [SignUpController::class, 'get_roles']);
 Route::get('/exam', [ExamController::class, 'select_all']);
 Route::post('/refer_exam', [ExamController::class, 'refer_exam']);
+Route::post('/save_exam', [ExamController::class, 'save_exam']);
+Route::post('/delete_exam', [ExamController::class, 'delete_exam']);
+Route::post('/save_question', [ExamController::class, 'save_question']);

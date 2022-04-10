@@ -5,13 +5,13 @@ import { Button, Loader} from 'semantic-ui-react';
 import './Exam.css';
 
 const columns = [
-    {field: 'exam_id', title: 'ID', width: 80},
-    {field: 'exam_name', title: 'Title', width: 300},
-    {field: 'major_name', title: 'Major', width: 150},
-    {field: 'type_exam', title: 'Kind', width: 100},
-    {field: 'submit_times', title: 'Submit', width: 120},
-    {field: 'user_name', title: 'Author', width: 120},
-    {field: 'cre_date', title: 'Date', width: 150, type: 'date'}
+    {field: 'exam_id'       , title: 'ID'       , width: 80},
+    {field: 'exam_name'     , title: 'Title'    , width: 300},
+    {field: 'major_name'    , title: 'Major'    , width: 150},
+    {field: 'type_exam'     , title: 'Kind'     , width: 100},
+    {field: 'submit_times'  , title: 'Submit'   , width: 120},
+    {field: 'user_name'     , title: 'Author'   , width: 120},
+    {field: 'cre_date'      , title: 'Date'     , width: 150, type: 'date'}
 ]
 
 const ExamTable = (props) =>{  
@@ -46,7 +46,7 @@ const ExamTable = (props) =>{
     }
 
     return (   
-        <div className="exam_table">
+        <div className="exam_table">            
             <Loader active={isLoading} size='big'/>
             <MaterialTable                
                 title='Exams List'
@@ -68,7 +68,7 @@ const ExamTable = (props) =>{
                         isFreeAction: true
                     },
                     {
-                        icon:()=><Button>Edit</Button>,
+                        icon:()=><Button color='blue'>Edit</Button>,
                         tooltip: 'Edit Exam',
                         onClick:(e, data)=>handleClickEditExam(data)
                     }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Vocabulary extends Model
 {
+    public $timestamps  = false;
     protected $table    = 'vocbulary';
     protected $fillable =   ['voc_id', 
                             'voc_name', 

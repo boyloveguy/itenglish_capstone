@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class QuestionPool extends Model
 {
+    public $timestamps  = false;
     protected $table    = 'question_pool';
     protected $fillable =   ['ques_id',
                             'ques_text', 

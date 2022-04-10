@@ -1,5 +1,5 @@
 import React, { Component} from 'react';
-import { Button, Form, Input, Select, Modal, Loader} from 'semantic-ui-react';
+import { Button, Form, Input, Select, Loader} from 'semantic-ui-react';
 import './SignUp.css';
 import { Helmet } from 'react-helmet';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -7,7 +7,7 @@ import SemanticDatepicker from 'react-semantic-ui-datepickers';
 import 'react-semantic-ui-datepickers/dist/react-semantic-ui-datepickers.css';
 import axios from 'axios';
 import FormData from 'form-data';
-import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2'
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
@@ -134,8 +134,6 @@ class SignUp extends Component {
             .then(response => {
                 var result = response.data.success;
                 this.setState({
-                    message     : response.data.message,
-                    showMsg     : true,
                     isLoading   : false
                 });
                 if(result){
@@ -145,22 +143,31 @@ class SignUp extends Component {
                     cookies.set('user_id', user_id, { path: '' });
                     cookies.set('user_name', user_name, { path: '' });
                     cookies.set('user_role', user_role, { path: '' });
-                    this.setState({
-                        modal_btn   : 'Go to Home page'
-                    });
+
+                    Swal.fire({
+                        title: response.data.message,
+                        icon: 'success',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Go to Home Page'
+                    }).then((results) => {
+                        if (results.isConfirmed) {
+                            window.location.href = `/home`
+                        }
+                    })
                 }else{
-                    this.setState({
-                        modal_btn   : 'Cancel'
-                    });
+                    Swal.fire({
+                        title: 'Oops...',
+                        text: response.data.message,
+                        icon: 'error'
+                    })
                 }
             })
             .catch(error => {
-                this.setState({
-                    message     : error.data.message,
-                    showMsg     : true,
-                    isLoading   : false,
-                    modal_btn   : 'Cancel'
-                });
+                Swal.fire({
+                    title: 'Oops...',
+                    text: 'Server has problem! Please try another time.',
+                    icon: 'error'
+                })
             });
         }
     }
@@ -173,24 +180,6 @@ class SignUp extends Component {
                         <title>ITEnglish | Sign-up</title>
                     </Helmet>
                     <Loader active={this.state.isLoading} size='big'/>
-                    <Modal
-                        size='mini'
-                        open={this.state.showMsg}
-                        onActionClick={this.onActionClick}
-                        id = 'modal-sign-up'
-                    >
-                        <Modal.Header>Notification</Modal.Header>
-                        <Modal.Content>
-                        <p>{this.state.message}</p>
-                        </Modal.Content>
-                        <Modal.Actions>
-                        <Button positive onClick={() => this.handleButtonModal()}>
-                            <Link to={this.state.modal_btn_success}>
-                                {this.state.modal_btn}
-                            </Link>
-                        </Button>
-                        </Modal.Actions>
-                    </Modal>
                     <div className='sign-up-container'>
                         <Form>
                             <Form.Field

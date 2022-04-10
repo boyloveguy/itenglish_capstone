@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Loader, Container, Select, TextArea, Label, Radio, Image, Icon, Input } from 'semantic-ui-react';
+import { Button, Form, Loader, Container, Select, TextArea, Label, Image, Icon, Input } from 'semantic-ui-react';
 import { Helmet } from 'react-helmet';
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import Screen500 from '../Error/Screen500';
-import InputNumber from 'react-input-just-numbers';
 import { useParams } from "react-router-dom";
 import FormData from 'form-data';
 import axios from 'axios';
 import MenuDiv from '../MenuDiv/MenuDiv';
-import Screen404 from '../Error/Screen404';
 import './Exam.css';
 import Cookies from 'universal-cookie';
+import Swal from 'sweetalert2'
 
 const cookies       = new Cookies();
 const answer_arr    = ['A', 'B', 'C', 'D', 'E', 'F','G', 'H'];
@@ -21,32 +18,28 @@ const option_add_ans= [
 
 const ExamDetails = (props) => {
     try {
-        const { exam_id }                           = useParams();
-        const [typeAddQuestion, setTypeAddQuestion] = useState('');
-        const [examInfor, setExamInfor]             = useState([]);
-        const [majors, setMajors]                   = useState([]);
-        const [examTypes, setExamTypes]             = useState([]);
-        const [questions, setQuestions]             = useState([]);
-        const [answers, setAnswers]                 = useState([]);
-        const [isLoading, setLoading]               = useState(false);
-        const [choosen, setChoosen]                 = useState(true);
-        const [optionAddQues, setOptionAddQues]     = useState('');
-        const [examName, setExamName]               = useState('');
-        const [itTypeID, setITTypeID]               = useState('');
-        const [examType, setExamType]               = useState('');
-        const [examDesc, setExamDesc]               = useState('');
-        const [typeID, setTypeID]                   = useState('');
-        const [quesID, setQuesID]                   = useState('');
-        const [quesText, setQuesText]               = useState('');
-        const [quesPoint, setQuesPoint]             = useState('');
-        const [quesImage, setQuesImage]             = useState([]);
-        const [ansID, setAnsID]                     = useState('');
-        const [ansDesc, setAnsDesc]                 = useState([]);
-        const [isCorrectAns, setIsCorrectAns]       = useState();
-
-        const user_id                               = cookies.get('user_id');
-        const user_role                             = cookies.get('user_role');
-        // let ans_index                               = 4;
+        const { exam_id }  = useParams();
+        const [exam, setExam] = useState({
+            typeAddQuestion : '',
+            examInfor       : [],
+            majors          : [],
+            examTypes       : [],
+            questions       : [],
+            answers         : [],
+            isLoading       : true,
+            choosen         : true,
+            optionAddQues   : '',
+            examName        : '',
+            itTypeID        : '',
+            examType        : '',
+            examDesc        : '',
+            user_id         : cookies.get('user_id'),
+            user_role       : cookies.get('user_role'),
+            examName        : '',
+            examDesc        : '',
+            itTypeID        : '',
+            examType        : ''
+        })
 
         const url = "http://localhost/itenglish_capstone/server/public/api/refer_exam";
 
@@ -69,141 +62,253 @@ const ExamDetails = (props) => {
             })
             .then(response => {
                 let exams       = response.data.exam;
-                let answers     = response.data.answers;
-                let questions   = response.data.questions;
-                let majors      = response.data.majors;
+                let answer      = response.data.answers;
+                let question    = response.data.questions;
+                let major       = response.data.majors;
                 let exam_types  = response.data.exam_types;
-                setExamInfor(exams); 
-                setMajors(majors);  
-                setExamTypes(exam_types);       
-                setAnswers(answers);  
-                setQuestions(questions);   
-                setIsCorrectAns('A')        
+                setExam(prev => ({
+                    ...prev,
+                    examInfor   : exams, 
+                    answers     : answer, 
+                    questions   : question, 
+                    majors      : major, 
+                    examTypes   : exam_types
+                }))
+
+                exams.map((key)=>{
+                    setExam(prev => ({
+                        ...prev,
+                        examName    : key.exam_name,
+                        examDesc    : key.exam_desc,
+                        itTypeID    : key.it_type_id,
+                        examType    : key.type_id,
+                        isLoading   : false
+                    }))
+                })
             })
             .catch(error => {
+                setExam(prev => ({
+                    ...prev,
+                    isLoading: false
+                }))
                 console.log(error)
             });
-        }, []);
+        }, []);        
 
-        // const handleImageChange = (e) => {
-        //     if (e.target.files) {
-        //         setQuesImage(e.target.files)
-        //         const fileArr = Array.from(e.target.files).map((file) => URL.createObjectURL(file))
-        //         setSelectedImages((prevImages) => prevImages.concat(fileArr))
-        //         Array.from(e.target.files).map(
-        //             (file) => URL.revokeObjectURL(file)
-        //         )
-        //     }
-        // }
+        const handleChangeExamName = (e) =>{
+            setExam(prev => ({
+                ...prev,
+                examName: e.target.value
+            }))
+        }
 
-        // const renderPhotos = (source) => {
-        //     return source.map((photo) => {
-        //         return <Image className='ques-image-style' src={photo} key={photo} size='medium' />
-        //     })
-        // }
+        const handleChangeExamDesc = (e) =>{
+            setExam(prev => ({
+                ...prev,
+                examDesc: e.target.value
+            }))
+        }
 
-        const handleChangeSelect = (e, value) => {
-            setIsCorrectAns(value.value);
-        }   
+        const handleChangeSelectExamType = (e, data) => {
+            setExam(prev => ({
+                ...prev,
+                examType: data.value
+            }))
+        }  
+        
+        const handleChangeSelectExamITType = (e, data) => {
+            setExam(prev => ({
+                ...prev,
+                itTypeID: data.value
+            }))
+        }
 
         const handleOnChangeSelectAddQuestion = (e, data) => {
-            setOptionAddQues(data.value);
-            if(data.value !== undefined || data.value !== ''){
-                setChoosen(false);
-                setTypeAddQuestion(data.value);                
+            setExam(prev => ({
+                ...prev,
+                optionAddQues: data.value
+            }))
+            if(data.value !== undefined || data.value !== ''){                 
+                setExam(prev => ({
+                    ...prev,
+                    choosen: false,
+                    typeAddQuestion: data.value
+                }))
             }
         }    
         
         const handleClickMoveToAddQuestion = (e) => {
-            if(typeAddQuestion == '1'){
-                window.location.href = `/add-question/${exam_id}`
-            }
-            if(typeAddQuestion == '2'){
-                window.location.href = `/add-from-question-pool/${exam_id}`
+            try {
+                if(exam.typeAddQuestion == '1'){
+                    window.location.href = `/add-question/${exam_id}`
+                }
+                if(exam.typeAddQuestion == '2'){
+                    window.location.href = `/add-from-question-pool/${exam_id}`
+                }
+            } catch (error) {
+                console.log(error)
             }
         }
 
-        // const handleAddAnswer = ()=>{
-        //     if(ans_index <= 7){
-        //         var pTag = document.createElement("p");
-        //         pTag.innerHTML = '<div class="fields">' +
-        //                             '<div class="three wide field">' +
-        //                                 '<div class="ui radio checkbox">' +
-        //                                     '<input class="hidden" name="radioGroup" readonly="" tabindex="0" type="radio" value="'+ answer_arr[ans_index] +'">' +
-        //                                     '<label>Correct Answer</label>' +
-        //                                 '</div>' +
-        //                             '</div>' +
-        //                             '<div class="twelve wide field">' +
-        //                                 '<textarea name="ans_desc_'+ answer_arr[ans_index] +'" maxlength="1000" rows="3"></textarea>' +
-        //                             '</div>' +
-        //                             '<div width="1" class="ui red circular label" style="height: fit-content; margin-top: 5px; cursor: pointer">X</div>' +
-        //                         '</div>'
-        //         ans_index++;
-        //         document.getElementById('div-answers').appendChild(pTag);
-        //         return;
-        //     }
-        //     alert('Maximum answers is 8!')
-        // }
+        const handleSaveExam = () => {
+            if(exam.examName != ''
+            && exam.examDesc != ''
+            && exam.itTypeID != ''
+            && exam.examType != ''
+            && exam_id       != ''
+            ){
+                setExam(prev => ({
+                    ...prev,
+                    isLoading: true
+                }))
 
-        // const handleDeleteAnswer = (e, data) =>{
-        //     e.target.parentElement.remove()
-        // }
+                let formData = new FormData();
+                formData.append('exam_id', exam_id);
+                formData.append('exam_name', exam.examName);
+                formData.append('exam_desc', exam.examDesc);
+                formData.append('exam_major', exam.itTypeID);
+                formData.append('exam_type', exam.examType);
+                formData.append('user_id', exam.user_id);
+                formData.append('type_save', 1);
 
-        // const handleSaveQuestion = (e) => {
-        //     let listImages  = [];
-        //     let listAns     = [];
+                const url_save_exam = 'http://localhost/itenglish_capstone/server/public/api/save_exam';
 
-        //     for(let i = 0; i < quesImage.length; i++){
-        //         listImages.push(quesImage[0].name);
-        //     }
+                axios({
+                    method  : 'POST',
+                    url     : url_save_exam,
+                    dataType: 'jsonp',
+                    data    : formData,
+                    config  : {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            'Access-Control-Allow-Origin': 'http://localhost:3000',
+                            'Access-Control-Allow-Credentials': 'true',
+                            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+                        }
+                    }
+                })
+                .then(response => {
+                    var result = response.data.success;   
+                    
+                    setExam(prev => ({
+                        ...prev,
+                        isLoading: false
+                    }))
 
-        //     let list_ans        = document.getElementsByClassName('ques-ans');
-        //     let list_isCorrect  = document.getElementsByClassName('rad-is-correct');
-        //     for(let i = 0; i < list_ans.length; i++){
-        //         listAns.push({
-        //             ques_id     : '',
-        //             value       : list_ans[i].children[0].value,
-        //             is_correct  : list_isCorrect[i].classList.contains('checked')? '1' : '0'
-        //         })
-        //     }
-        //     console.log(listAns)
+                    if(result){
+                        Swal.fire({
+                            icon                : 'success',
+                            title               : response.data.message,
+                            showConfirmButton   : false,
+                            timer               : 1500
+                        })
+                    }else{
+                        Swal.fire({
+                            icon    : 'error',
+                            title   : 'Oops...',
+                            text    : response.data.message,
+                        })
+                    }
+                })
+                .catch(error => {
+                    setExam(prev => ({
+                        ...prev,
+                        isLoading: false
+                    }))
 
-        //     // if (quesPoint != '' 
-        //     // && quesText != '' 
-        //     // ){
-        //     //     setLoading(true);
-        //     //     let formData = new FormData();
-        //     //     formData.append('ques_point', quesPoint);
-        //     //     formData.append('ques_text', quesText);
-        //     //     formData.append('ques_image', listImages.length > 0 ? JSON.stringify(listImages) : null);
-        //     //     formData.append('b_day', this.state.b_day);
-        //     //     formData.append('email', this.state.email);
-        //     //     formData.append('password', this.state.password);
-        //     //     formData.append('role', this.state.role);
+                    Swal.fire({
+                        icon    : 'error',
+                        title   : 'Oops...',
+                        text    : error.data.message
+                    })
+                });
+            }else{
+                console.log(112)
+            }
+        }
+
+        const handleDeleteExam = () => {
+            try {
+                Swal.fire({
+                    title: 'Are you sure want to delete this exam?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                })
+                .then((result1) => {
+                    if (result1.isConfirmed) {
+                        setExam(prev => ({
+                            ...prev,
+                            isLoading: true
+                        }))
     
-        //     //     const url = 'http://localhost/itenglish_capstone/server/public/api/sign_up';
-        //     //     axios({
-        //     //         method  : 'POST',
-        //     //         url     : url,
-        //     //         dataType: 'jsonp',
-        //     //         data    : formData,
-        //     //         config  : {
-        //     //             headers: {
-        //     //                 'Content-Type': 'multipart/form-data',
-        //     //                 'Access-Control-Allow-Origin': 'http://localhost:3000',
-        //     //                 'Access-Control-Allow-Credentials': 'true',
-        //     //                 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
-        //     //             }
-        //     //         }
-        //     //     })
-        //     //     .then(response => {
-        //     //         console.log(response)
-        //     //     })
-        //     //     .catch(error => {
-        //     //         console.log(error)
-        //     //     });
-        //     // }
-        // }
+                        let formData = new FormData();
+                        formData.append('exam_id', exam_id);
+    
+                        const url_delete_exam = 'http://localhost/itenglish_capstone/server/public/api/delete_exam';
+    
+                        axios({
+                            method  : 'POST',
+                            url     : url_delete_exam,
+                            dataType: 'jsonp',
+                            data    : formData,
+                            config  : {
+                                headers: {
+                                    'Content-Type': 'multipart/form-data',
+                                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                                    'Access-Control-Allow-Credentials': 'true',
+                                    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+                                }
+                            }
+                        })
+                        .then(response => {
+                            var result2 = response.data.success;   
+                            
+                            setExam(prev => ({
+                                ...prev,
+                                isLoading: false
+                            }))
+    
+                            if(result2){
+                                Swal.fire({
+                                    title: response.data.message,
+                                    icon: 'success',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Go to Exam Page'
+                                }).then((result3) => {
+                                    if (result3.isConfirmed) {
+                                        window.location.href = `/exam`
+                                    }
+                                })
+                            }else{
+                                Swal.fire({
+                                    icon    : 'error',
+                                    title   : 'Oops...',
+                                    text    : 'Something went wrong!'
+                                })
+                            }
+                        })
+                        .catch(error => {
+                            setExam(prev => ({
+                                ...prev,
+                                isLoading: false
+                            }))
+    
+                            Swal.fire({
+                                icon    : 'error',
+                                title   : 'Oops...',
+                                text    : error.data.message
+                            })
+                        });    
+                    }
+                })
+            } catch (error) {
+                console.log(error)
+            }            
+        }
 
         return (
             <div className="exam_details pad-top-150">
@@ -211,8 +316,9 @@ const ExamDetails = (props) => {
                     <title>ITEnglish | Exam details</title>
                 </Helmet>
                 <MenuDiv />
+                <Loader active={exam.isLoading} size='big'/>
                 <Container className='div-exam-details mar-bot-20'>
-                    <Label key='massive' size='massive' className='mar-bot-20'>Exam Information</Label>
+                    <Label size='big' color='teal' tag className='mar-bot-20'>Exam Information</Label>
                     <Form>                        
                         <Form.Group widths={2}>
                             <Form.Field
@@ -224,75 +330,74 @@ const ExamDetails = (props) => {
                                 disabled
                             />
                         </Form.Group>
-                        {examInfor.map((key)=>{
-                            return (
-                                <div style={{marginBottom: 10}}>
-                                    <Form.Field
-                                        name='exam_name'
-                                        label='Title'
-                                        control={Input}
-                                        placeholder='Exam title'
-                                        maxLength="100"
-                                        value={key.exam_name}
-                                        // onChange={(e) => setExamName(e.target.value)}
-                                    />
-                                    <Form.Group widths={2}>
-                                        <Form.Field
-                                            required
-                                            label='Kind of exam'
-                                            control={Select}
-                                            name='exam_type'
-                                            className='exam_type'
-                                            options={examTypes}
-                                            onChange={handleChangeSelect}
-                                            value={key.type_id}
-                                        />
-                                        <Form.Field
-                                            required
-                                            label='Major'
-                                            control={Select}
-                                            name='exam_major'
-                                            className='exam_major'
-                                            options={majors}
-                                            onChange={handleChangeSelect}
-                                            value={key.it_type_id}
-                                        />
-                                    </Form.Group>
-                                    <Form.Field
-                                        control={TextArea}
-                                        label='Description'
-                                        placeholder='Description about this exam...'
-                                        value={key.exam_desc}
-                                    />
-                                    <Form.Group widths={2}>
-                                        <Form.Select
-                                            fluid
-                                            label='Select to add new question'
-                                            options={option_add_ans}
-                                            placeholder='Select type'
-                                            onChange={handleOnChangeSelectAddQuestion}
-                                            value={optionAddQues}
-                                        />
-                                        <Form.Button 
-                                            className='btn-add-question'
-                                            label='Click to add'
-                                            disabled={choosen}
-                                            color='blue'
-                                            onClick={handleClickMoveToAddQuestion}
-                                        >Create...
-                                        </Form.Button>
-                                    </Form.Group>
-                                </div>
-                            )
-                        })}                                                                         
+                        <div style={{ marginBottom: 10 }}>
+                            <Form.Field
+                                name='exam_name'
+                                label='Title'
+                                control={Input}
+                                placeholder='Exam title'
+                                maxLength="100"
+                                value={exam.examName}
+                                onChange={handleChangeExamName}
+                                required
+                            />
+                            <Form.Group widths={2}>
+                                <Form.Field
+                                    required
+                                    label='Kind of exam'
+                                    control={Select}
+                                    name='exam_type'
+                                    className='exam_type'
+                                    options={exam.examTypes}
+                                    onChange={handleChangeSelectExamType}
+                                    value={exam.examType}
+                                />
+                                <Form.Field
+                                    required
+                                    label='Major'
+                                    control={Select}
+                                    name='exam_major'
+                                    className='exam_major'
+                                    options={exam.majors}
+                                    onChange={handleChangeSelectExamITType}
+                                    value={exam.itTypeID}
+                                />
+                            </Form.Group>
+                            <Form.Field
+                                control={TextArea}
+                                label='Description'
+                                placeholder='Description about this exam...'
+                                value={exam.examDesc}
+                                onChange={handleChangeExamDesc}
+                            />
+                            <Form.Group widths={2}>
+                                <Form.Select
+                                    fluid
+                                    label='Select to add new question'
+                                    options={option_add_ans}
+                                    placeholder='Select type'
+                                    onChange={handleOnChangeSelectAddQuestion}
+                                    value={exam.optionAddQues}
+                                />
+                                <Form.Button
+                                    className='btn-add-question'
+                                    label='Click to add'
+                                    disabled={exam.choosen}
+                                    color='blue'
+                                    onClick={handleClickMoveToAddQuestion}
+                                >Create...
+                                </Form.Button>
+                            </Form.Group>
+                        </div>
                         <div style={{ textAlign: 'center' }}>
-                            <Button type='submit' className='btn-register'>Save Exam Information</Button>
+                            <Button onClick={handleSaveExam} type='submit' color='green' className='btn-save-exam' style={{marginRight: 10}}>Save</Button>
+                            <Button onClick={handleDeleteExam} type='submit' color='red' className='btn-delete-exam'>Delete</Button>
                         </div>                     
                     </Form>
                 </Container>
                 <Container className='div-exam-details mar-bot-20'>
-                    <Label size='massive' className='mar-bot-20'>Questions List</Label>
-                    {questions.map((ques, index)=>{
+                    <Label size='big' color='teal' tag className='mar-bot-20'>Questions List</Label>
+                    {exam.questions.map((ques, index)=>{
                         return (
                             <div style={{ marginTop: 20 }}>
                                 <Button 
@@ -309,7 +414,7 @@ const ExamDetails = (props) => {
                                 <div style={{ marginBottom: 10 }} className='result-image-ques'>
                                     {ques.ques_image != null? <Image className='ques-image-style' src={'/images/' + ques.ques_image} size='medium' /> :''}
                                 </div>                                                                
-                                {answers[index].map((ans, idx)=>{
+                                {exam.answers[index].map((ans, idx)=>{
                                     return(
                                         <div>
                                             <p hidden>{ans.ans_id}</p>
@@ -321,137 +426,11 @@ const ExamDetails = (props) => {
                         )
                     })}
                 </Container>
-                {/* <Container className='div-exam-questions'>
-                    <Label size='massive' className='mar-bot-20'>Add/Edit Question</Label>
-                    <Form>
-                        <div className='div-one-question'>
-                            <Form.Group width={3}>
-                                <Form.Field
-                                    required
-                                    name='ques_point'
-                                    label='Answer Point Value'
-                                    control={Input}
-                                    maxLength="4"
-                                    type='number'
-                                />                              
-                            </Form.Group>
-                            <Form.Field
-                                required
-                                name='ques_text'
-                                label='Question Text'
-                                control={TextArea}
-                            />
-                            <Form.Group>
-                                <div className='field'>
-                                    <label>Add a image of question</label>
-                                </div>
-                                <input
-                                    type='file'
-                                    onChange={handleImageChange}
-                                    accept='image/*'
-                                    hidden
-                                    id="input_image_question"
-                                    multiple
-                                />
-                                <label htmlFor='input_image_question'>
-                                    <AddPhotoAlternateIcon />
-                                </label>
-                            </Form.Group>
-                            <div style={{ marginBottom: 10 }} className='result-image-ques'>
-                                {renderPhotos(selectedImages)}
-                            </div>
-                            <div id='div-answers'>
-                                <Form.Group>
-                                    <Form.Field width={3}>
-                                        <Radio
-                                            label='Correct Answer'
-                                            name='radioGroup'
-                                            value='A'
-                                            checked={isCorrectAns === 'A'}
-                                            onChange={handleChangeSelect}
-                                            className='rad-is-correct'
-                                        />
-                                    </Form.Field>
-                                    <Form.Field
-                                        name='ans_desc_a'
-                                        control={TextArea}
-                                        maxLength="1000"
-                                        width={13}
-                                        required
-                                        className='ques-ans'
-                                    />
-                                </Form.Group>
-                                <Form.Group>
-                                    <Form.Field width={3}>
-                                        <Radio
-                                            label='Correct Answer'
-                                            name='radioGroup'
-                                            value='B'
-                                            checked={isCorrectAns === 'B'}
-                                            onChange={handleChangeSelect}
-                                            className='rad-is-correct'
-                                        />
-                                    </Form.Field>
-                                    <Form.Field
-                                        name='ans_desc_b'
-                                        control={TextArea}
-                                        maxLength="1000"
-                                        width={13}
-                                        required
-                                        className='ques-ans'
-                                    />
-                                </Form.Group>
-                                <Form.Group>
-                                    <Form.Field width={3}>
-                                        <Radio
-                                            label='Correct Answer'
-                                            name='radioGroup'
-                                            value='C'
-                                            checked={isCorrectAns === 'C'}
-                                            onChange={handleChangeSelect}
-                                            className='rad-is-correct'
-                                        />
-                                    </Form.Field>
-                                    <Form.Field
-                                        name='ans_desc_c'
-                                        control={TextArea}
-                                        maxLength="1000"
-                                        width={13}
-                                        className='ques-ans'
-                                    />
-                                </Form.Group>
-                                <Form.Group>
-                                    <Form.Field width={3}>
-                                        <Radio
-                                            label='Correct Answer'
-                                            name='radioGroup'
-                                            value='D'
-                                            checked={isCorrectAns === 'D'}
-                                            onChange={handleChangeSelect}
-                                            className='rad-is-correct'
-                                        />
-                                    </Form.Field>
-                                    <Form.Field
-                                        name='ans_desc_d'
-                                        control={TextArea}
-                                        maxLength="1000"
-                                        width={13}
-                                        className='ques-ans'
-                                    />
-                                </Form.Group>                                
-                            </div>
-                            <Label style={{cursor: 'pointer'}} color='blue' className='btn-add-answer' onClick={handleAddAnswer}>Add more answers</Label>
-                        </div>
-                        <div style={{ textAlign: 'center' }}>
-                            <Button type='submit' className='btn-register' onClick={handleSaveQuestion}>Save Question</Button>
-                        </div>
-                    </Form>
-                </Container> */}
                 <div
                     style={{
-                        textAlign: 'center',
-                        paddingTop: 80,
-                        paddingBottom: 20
+                        textAlign       : 'center',
+                        paddingTop      : 80,
+                        paddingBottom   : 20
                     }}
                 >
                     <p>© ITEnglish Copyright 2022</p>
@@ -460,7 +439,6 @@ const ExamDetails = (props) => {
         )
     } catch (error) {
         return (
-            // <Screen404 />
             console.log(error)
         )
     }
