@@ -11,9 +11,9 @@ import Cookies from 'universal-cookie';
 import Swal from 'sweetalert2';
 import { saveAs } from 'file-saver';
 
-const cookies = new Cookies();
-const answer_arr = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-const max_answer = 4;
+const cookies       = new Cookies();
+const answer_arr    = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+const max_answer    = 4;
 
 const AddQuestion = (props) => {
     const { exam_id }                           = useParams();
@@ -31,7 +31,6 @@ const AddQuestion = (props) => {
     })
 
     const handleChangeRadio = (e, data) => {
-        // setIsCorrectAns(value.value);
         setQuestion(prev => ({
             ...prev,
             isCorrectAns: data.value
@@ -75,16 +74,9 @@ const AddQuestion = (props) => {
     }
 
     const handleSaveQuestion = (e) => {
-        try {
-            let listImages = [];
-            let listAns = [];
-
-            //get list image
-            for (let i = 0; i < question.quesImage.length; i++) {
-                listImages.push(question.quesImage[i]);
-            }
-
+        try {       
             //get list answer
+            let listAns = [];
             let list_ans = document.getElementsByClassName('ques-ans');
             let list_isCorrect = document.getElementsByClassName('rad-is-correct');
             let check_empty_ans = 0;
@@ -111,13 +103,13 @@ const AddQuestion = (props) => {
                 let formData = new FormData();
                 formData.append('ques_point', question.quesPoint);
                 formData.append('ques_text', question.quesText);
-                // formData.append('ques_image', listImages.length > 0 ? JSON.stringify(listImages) : null);
                 formData.append('list_ans', JSON.stringify(listAns));
                 formData.append('user_id', question.user_id);
-                formData.append('exam_id', exam_id); 
+                formData.append('exam_id', exam_id);
+                formData.append('images_length', question.quesImage.length);  
                 if(question.quesImage.length > 0){
                     for (let i = 0; i < question.quesImage.length; i++) {
-                        formData.append('ques_image', question.quesImage[i]);
+                        formData.append('ques_image_' + i, question.quesImage[i]);
                     }
                 }else{
                     formData.append('ques_image', null);
@@ -148,10 +140,10 @@ const AddQuestion = (props) => {
 
                     if(result){
                         Swal.fire({
-                            title: response.data.message,
-                            icon: 'success',
-                            confirmButtonColor: '#3085d6',
-                            confirmButtonText: 'Go to Exam Detail Page'
+                            title               : response.data.message,
+                            icon                : 'success',
+                            confirmButtonColor  : '#3085d6',
+                            confirmButtonText   : 'Go to Exam Detail Page'
                         }).then((results) => {
                             if (results.isConfirmed) {
                                 window.location.href = `/exam-details/${exam_id}`
@@ -172,9 +164,9 @@ const AddQuestion = (props) => {
                     }))
 
                     Swal.fire({
-                        title: 'Oops...',
-                        text: 'Server has problem! Please try another time.',
-                        icon: 'error'
+                        title   : 'Oops...',
+                        text    : 'Server has problem! Please try another time.',
+                        icon    : 'error'
                     })
                 });
             }

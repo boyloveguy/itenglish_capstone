@@ -22,7 +22,7 @@ class MenuDiv extends Component {
     handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
     render() {
-        const { activeItem } = this.state
+        const { activeItem } = this.state.activeItem
 
         return (
             <div>

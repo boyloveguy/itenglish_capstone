@@ -230,13 +230,13 @@ const ExamDetails = (props) => {
         const handleDeleteExam = () => {
             try {
                 Swal.fire({
-                    title: 'Are you sure want to delete this exam?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
+                    title               : 'Are you sure want to delete this exam?',
+                    text                : "You won't be able to revert this!",
+                    icon                : 'warning',
+                    showCancelButton    : true,
+                    confirmButtonColor  : '#3085d6',
+                    cancelButtonColor   : '#d33',
+                    confirmButtonText   : 'Yes, delete it!'
                 })
                 .then((result1) => {
                     if (result1.isConfirmed) {
@@ -274,10 +274,10 @@ const ExamDetails = (props) => {
     
                             if(result2){
                                 Swal.fire({
-                                    title: response.data.message,
-                                    icon: 'success',
-                                    confirmButtonColor: '#3085d6',
-                                    confirmButtonText: 'Go to Exam Page'
+                                    title               : response.data.message,
+                                    icon                : 'success',
+                                    confirmButtonColor  : '#3085d6',
+                                    confirmButtonText   : 'Go to Exam Page'
                                 }).then((result3) => {
                                     if (result3.isConfirmed) {
                                         window.location.href = `/exam`
@@ -308,6 +308,21 @@ const ExamDetails = (props) => {
             } catch (error) {
                 console.log(error)
             }            
+        }
+
+        const handleReferImages = (images, classAdd) => {
+            try {
+                let images_arr      = images.split(",");
+                let divTag          = document.createElement('div');
+                divTag.className    = 'result-image-ques';
+                divTag.innerHTML    = '';                
+                for(let i = 0; i < images_arr.length; i++){
+                    divTag.innerHTML += '<img class="ui medium image ques-image-style" src="/images/exam/' + images_arr[i] + '" alt="Improve your Vocabulary">';
+                }
+                document.getElementsByClassName(classAdd)[0].appendChild(divTag);
+            } catch (error) {
+                console.log(error)
+            }
         }
 
         return (
@@ -411,8 +426,13 @@ const ExamDetails = (props) => {
                                 </Label>  ({ques.ques_point}) points
                                 <p hidden>{ques.ques_id}</p>
                                 <p>{ques.ques_text}</p>
-                                <div style={{ marginBottom: 10 }} className='result-image-ques'>
-                                    {ques.ques_image != null? <Image className='ques-image-style' src={'/images/' + ques.ques_image} size='medium' /> :''}
+                                <div 
+                                    style={{ marginBottom: 10 }} 
+                                    className={'ques_' + index}
+                                >
+                                    {ques.ques_image != null? 
+                                    handleReferImages(ques.ques_image, 'ques_' + index) 
+                                    :''}
                                 </div>                                                                
                                 {exam.answers[index].map((ans, idx)=>{
                                     return(

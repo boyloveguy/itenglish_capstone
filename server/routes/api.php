@@ -27,3 +27,4 @@ Route::post('/refer_exam', [ExamController::class, 'refer_exam']);
 Route::post('/save_exam', [ExamController::class, 'save_exam']);
 Route::post('/delete_exam', [ExamController::class, 'delete_exam']);
 Route::post('/save_question', [ExamController::class, 'save_question']);
+Route::post('/get_question_pool', [ExamController::class, 'get_question_pool']);
