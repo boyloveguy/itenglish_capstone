@@ -1,18 +1,18 @@
 import React, { Component } from "react";
 import { Button, Form, Input, Image } from "semantic-ui-react";
-import "./Login.css";
 import { Helmet } from "react-helmet";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { withRouter } from "react-router-dom";
 import Validator from "../../utils/validator";
 
-class Login extends Component {
+class ChangePassword extends Component {
   constructor(props) {
     super(props);
     this.init();
     this.state = {
-      email: "",
+      current_password: "",
+      new_password: "",
+      new_confirm_password: "",
       password: "",
       errors: {},
     };
@@ -21,22 +21,22 @@ class Login extends Component {
       (!state[field] && !value) || !!value;
     const rules = [
       {
-        field: "email",
+        field: "current_password",
         method: "isEmpty",
         validWhen: false,
-        message: "The email field is required.",
+        message: "The current password field is required.",
       },
       {
-        field: "email",
-        method: "isEmail",
-        validWhen: true,
-        message: "The email must be a valid email address.",
-      },
-      {
-        field: "password",
+        field: "new_password",
         method: "isEmpty",
         validWhen: false,
-        message: "The password field is required.",
+        message: "The new password field is required.",
+      },
+      {
+        field: "new_confirm_password",
+        method: "isEmpty",
+        validWhen: false,
+        message: "The new confirm password field is required.",
       },
       {
         field: "message",
@@ -64,27 +64,19 @@ class Login extends Component {
     this.setState({
       errors: this.validator.validate(this.state),
     });
-    const { email, password } = this.state;
+
+    const { current_password, new_password, new_confirm_password } = this.state;
     const formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
+    formData.append("current_password", current_password);
+    formData.append("new_password", new_password);
+    formData.append("new_confirm_password", new_confirm_password);
 
     axios({
       method: "post",
-      url: "http://localhost:8000/api/login",
+      url: "http://localhost:8000/api/change-password",
       data: formData,
     }).then((res) => {
-      const nameUser = res.data.user.name;
-      Swal.fire(
-        "Hello " + nameUser,
-        "You have been logged-in successfully",
-        "success"
-      ).then(() => {
-        localStorage.setItem("userToken", res.data.token);
-        localStorage.setItem("userName", res.data.user.name);
-        localStorage.setItem("userId", res.data.user.id);
-        this.props.history.push("/");
-      });
+      Swal.fire("Success", "Password change successfully.", "success");
     });
   };
 
@@ -94,7 +86,7 @@ class Login extends Component {
       <React.Fragment>
         <div className="div-login">
           <Helmet>
-            <title>Login</title>
+            <title>Update Password</title>
           </Helmet>
           <div className="login-container">
             <div className="div-logo">
@@ -102,48 +94,53 @@ class Login extends Component {
             </div>
             <Form onSubmit={this.handleSubmit} className="form-normal">
               <Form.Field className="div-field">
-                <label>Email</label>
+                <label>Current Password</label>
                 <Input
-                  placeholder="Email"
-                  name="email"
+                type="password"
+                  name="current_password"
                   onChange={this.handleChange}
                 />
 
-                {errors.email && (
+                {errors.current_password && (
                   <div className="validation" style={{ display: "block" }}>
-                    {errors.email}
+                    {errors.current_password}
                   </div>
                 )}
               </Form.Field>
 
               <Form.Field className="div-field">
-                <label>Password</label>
+                <label>New Password</label>
 
                 <Input
                   type="password"
-                  placeholder="Password"
-                  name="password"
+                  name="new_password"
                   onChange={this.handleChange}
                 />
-                {errors.password && (
+                {errors.new_password && (
                   <div className="validation" style={{ display: "block" }}>
-                    {errors.password}
+                    {errors.new_password}
+                  </div>
+                )}
+              </Form.Field>
+
+              <Form.Field className="div-field">
+                <label>New Confirm Password</label>
+
+                <Input
+                  type="password"
+                  name="new_confirm_password"
+                  onChange={this.handleChange}
+                />
+                {errors.new_confirm_password && (
+                  <div className="validation" style={{ display: "block" }}>
+                    {errors.new_confirm_password}
                   </div>
                 )}
               </Form.Field>
 
               <Button className="form-button" type="submit">
-                Login
+                Save change
               </Button>
-              <div className="div-forgot-password">
-                <span>Or</span>
-                <a href="/password_reset">Forgot password?</a>
-              </div>
-
-              <div className="div-new-account">
-                <span>Don't have an account?</span>
-                <a href="/sign-up">Sign up</a>
-              </div>
             </Form>
           </div>
         </div>
@@ -152,4 +149,4 @@ class Login extends Component {
   }
 }
 
-export default withRouter(Login);
+export default ChangePassword;

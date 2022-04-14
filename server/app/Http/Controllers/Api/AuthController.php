@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -18,7 +19,8 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             $user = Auth::user();
-            $token = $request->user()->createToken($user->email . '_Token')->plainTextToken;
+            $token = $request->user()->createToken($user->email);
+
             return response()->json([
                 'token' => $token,
                 'user' => $user
@@ -38,13 +40,23 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function logout(Request $request)
+    public function signOut(Request $request)
     {
-        Auth::guard('web')->logout();
+        $request->session()->invalidate();
 
+        $request->session()->regenerateToken();
         return response()->json([
-            'status'=>200,
-            'message'=>"Logged Out Successfully"
+            'status' => 200,
+            'message' => "Logged Out Successfully"
+        ]);
+    }
+
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
+        return response()->json([
+            'status' => 200,
+            'user' => $user
         ]);
     }
 }

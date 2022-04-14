@@ -9,7 +9,7 @@ html {
 }
 .div-login {
   position: relative;
-  background-image: url("/images/sign-up-background.jpg") !important;
+  background-color: #fbbd08;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -19,19 +19,36 @@ html {
   background: white;
   border: 0px;
   border-radius: 7px;
-  width: 17%;
-  padding: 30px;
+  width: 25%;
+  padding: 40px;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 30%;
-  
+  top: 20%;
 }
 
-#button-login{
+.form-normal {
+  text-align: center;
   width: 100%;
 }
- .new-account{
+
+.form-normal label {
+  float: left;
+  padding: 5px 0;
+  color: black !important;
+  font-weight: normal !important;
+}
+.form-normal button.form-button {
+  text-align: center;
+  width: max-content;
+  background-color: #fbbd08;
+  color: white;
+}
+
+.div-forgot-password {
+  margin: 10px 0;
+}
+.new-account {
   background: white;
   border: 0px;
   border-radius: 7px;
@@ -40,19 +57,37 @@ html {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top:62%;
-  
-} 
-#forgot-password{
-  float: right;
-  font-size: 13px;
-  text-decoration: none;
+  top: 62%;
 }
-#new-account{
+.div-forgot-password a,
+.div-new-account a {
+  font-size: 13px;
+  color: #fbbd08;
+}
+.div-forgot-password span,
+.div-new-account span {
+  padding: 0 5px;
+}
+#new-account {
   margin-bottom: 0;
 }
-#label > label{
-  color: rgba(0,0,0,.87);
-  font-size: .92857143em;
-  font-weight: 700;
+
+.div-field{
+  position: relative;
+  margin-bottom: 30px !important;
+}
+.div-logo img {
+  width: 100% !important;
+  padding-bottom: 20px;
+  margin: 0;
+}
+
+.validation {
+  display: block;
+  position: absolute;
+  left: 0%;
+  margin: 5px 0;
+  font-weight: 500;
+  font-size: 13px;
+  color: red;
 }

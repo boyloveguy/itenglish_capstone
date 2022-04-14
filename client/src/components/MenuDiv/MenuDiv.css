@@ -45,3 +45,8 @@
     color: black !important;
    font-size: 18px !important;
 }
+
+a.my-profile{
+    color: black !important;
+    text-decoration: none;
+}

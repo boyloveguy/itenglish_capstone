@@ -8,12 +8,16 @@ import SignUpContainer from "./containers/SignUpContainer";
 import LoginContainer from "./containers/LoginContainer";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Dashboard from "./components/Dashboard/Dashboard";
+import ResetForgotPassword from "./components/ForgotPassword/ResetForgotPassword";
+import UpdatePassword from "./components/ForgotPassword/UpdatePassword";
+import MyProfile from "./components/MyProfile/MyProfile";
+import ChangePassword from "./components/ChangePassword/ChangePassword";
 import axios from "axios";
 
 // axios.defaults.baseURL = "http://localhost:8000/";
 // axios.defaults.headers.post['Content-Type']= 'application/json';
-// axios.defaults.headers.post['Accept']='application/json';
-// axios.defaults.withCredentials = true;
+axios.defaults.headers.post['Accept']='application/json';
+// axios.defaults.withCredentials = 'same-origin';
 axios.interceptors.request.use(function(config){
    const token = localStorage.getItem("userToken");
    config.headers.Authorization = token ? `Bearer ${token}` : '';
@@ -32,6 +36,10 @@ class App extends Component {
           <Route exact path="/home" component={HomeContainer} />
           <Route exact path="/login" component={LoginContainer} />
           <ProtectedRoute exact path="/dashboard" component={Dashboard} />
+          <Route  path="/password_reset/:token" component={UpdatePassword}/>
+          <Route exact path="/password_reset" component={ResetForgotPassword}/>
+          <Route exact path="/user/:id" component={MyProfile}/>
+          <Route exact path="/change_password" component={ChangePassword}/>
         </Switch>
       </div>
     );

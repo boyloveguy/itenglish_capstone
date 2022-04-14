@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PasswordResetLinkController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,14 +18,29 @@ use App\Http\Controllers\Api\AuthController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('logout', [AuthController::class, 'logout']);
-});
+// Route::post('logout', [AuthController::class, 'signOut']);
 
-Route::middleware('web')->group(function () {
-    Route::post('login', [AuthController::class, 'store']);
+
+
+Route::get('user/{id}', [AuthController::class, 'show']);
+Route::post('forgot-password', [PasswordResetLinkController::class, 'forgotPassword']);
+Route::post('reset-password', [PasswordResetLinkController::class, 'resetPassword']);
+Route::get('user/{id}', [UserController::class, 'show']);
+Route::put('user/{id}', [UserController::class, 'update']);
+
+
+Route::post('login', [AuthController::class, 'store']);
+Route::post('change-password', [UserController::class, 'changePassword']);
+
+Route::post('images', [ProductController::class, 'upload']);
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::post('/logout', [AuthController::class, 'signOut']);
 });
