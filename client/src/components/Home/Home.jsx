@@ -31,7 +31,7 @@ class Home extends Component {
                 <Helmet>
                     <title>ITEnglish | Home</title>
                 </Helmet>
-                <MenuDiv />
+                <MenuDiv activeItem={this.state.activeItem}/>
                 <Carousel fade className='pad-top-70'>
                     <Carousel.Item>
                         <img

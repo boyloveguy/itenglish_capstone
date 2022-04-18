@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MaterialTable from '@material-table/core';
 import { Checkbox} from '@material-ui/core';
 import { Button, Loader} from 'semantic-ui-react';
+import Cookies from 'universal-cookie';
 import './Exam.css';
 
 const columns = [
@@ -11,14 +12,17 @@ const columns = [
     {field: 'type_exam'     , title: 'Kind'     , width: 100},
     {field: 'submit_times'  , title: 'Submit'   , width: 120},
     {field: 'user_name'     , title: 'Author'   , width: 120},
-    {field: 'cre_date'      , title: 'Date'     , width: 150, type: 'date'}
+    {field: 'cre_date'      , title: 'Date'     , width: 150, type: 'date'},
+    {field: 'type_id'       , hidden: true}
 ]
+
+const cookies = new Cookies();
 
 const ExamTable = (props) =>{  
     const [filter, setFilter]       = useState(false);
     const [isLoading, setLoading]   = useState(true);
     const [tableData, setTableData] = useState([]);
-    const [examID, setExamID]       = useState(123);
+    const user_role                 = cookies.get('user_role')
     const url = "http://localhost/itenglish_capstone/server/public/api/exam";
     useEffect(() => {
         fetch(url)
@@ -45,6 +49,14 @@ const ExamTable = (props) =>{
         }        
     }
 
+    const handleClickDoExam=(data)=>{
+        try {
+            window.location.href = `/exam-explain/${data.exam_id}`
+        } catch (error) {
+            console.log(error)
+        }        
+    }
+
     return (   
         <div className="exam_table">            
             <Loader active={isLoading} size='big'/>
@@ -56,7 +68,7 @@ const ExamTable = (props) =>{
                     filtering: filter,
                     actionsColumnIndex: -1
                 }}
-                onRowClick={(event, rowData) => console.log(rowData)}
+                onRowClick={(event, rowData) => handleClickDoExam(rowData)}
                 actions={[
                     {
                         icon:()=><Checkbox
@@ -67,11 +79,13 @@ const ExamTable = (props) =>{
                         tooltip:"Hide/Show Filter option",
                         isFreeAction: true
                     },
+                    (user_role != '2' ?
+                    // user_role == '1' && 
                     {
-                        icon:()=><Button color='blue'>Edit</Button>,
+                        icon:()=><Button color='yellow'>Edit</Button>,
                         tooltip: 'Edit Exam',
                         onClick:(e, data)=>handleClickEditExam(data)
-                    }
+                    } : '')
             ]}
             />
         </div>        

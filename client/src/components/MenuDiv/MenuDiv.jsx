@@ -13,7 +13,7 @@ class MenuDiv extends Component {
         this.handleItemClick   = this.handleItemClick.bind(this);
 
         this.state = {
-            activeItem: 'home',
+            activeItem: this.props.activeItem,
             user_id: cookies.get('user_id'),
             user_name: cookies.get('user_name')
         };
@@ -23,14 +23,13 @@ class MenuDiv extends Component {
 
     render() {
         const { activeItem } = this.state.activeItem
-
         return (
             <div>
                 <Menu pointing secondary inverted className='menu-div' fixed='top'>
                     <Image src='/images/logo.png' size='medium' className='logo-image'/>
                     <Menu.Item
                         name='home'
-                        active={activeItem === 'home'}
+                        active={this.props.activeItem === 'home'}
                         onClick={this.handleItemClick}
                         className='pad-bot-26'
                         as={Link}
@@ -46,7 +45,7 @@ class MenuDiv extends Component {
                     </Dropdown>
                     <Menu.Item
                         name='exams and tests'
-                        active={activeItem === 'exams and tests'}
+                        active={this.props.activeItem === 'exams and tests'}
                         onClick={this.handleItemClick}
                         className='pad-bot-26'
                         as={Link}
@@ -54,7 +53,7 @@ class MenuDiv extends Component {
                     />
                     <Menu.Item
                         name='help'
-                        active={activeItem === 'help'}
+                        active={this.props.activeItem === 'help'}
                         onClick={this.handleItemClick}
                         className='pad-bot-26'
                     />

@@ -9,6 +9,9 @@ import ExamContainer from './containers/ExamContainer';
 import ExamDetails from './components/Exam/ExamDetails';
 import AddQuestion from './components/Exam/AddQuestion';
 import AddFromQuestionPool from './components/Exam/AddFromQuestionPool';
+import ExamExplain from './components/Exam/ExamExplain.jsx';
+import DoExam from './components/Exam/DoExam.jsx';
+import AddSpeaking from './components/Exam/AddSpeaking.jsx';
 
 class App extends Component{
   render(){
@@ -22,8 +25,11 @@ class App extends Component{
           <Route exact path="/home" component={HomeContainer}/>
           <Route exact path="/exam" component={ExamContainer}/>
           <Route exact path="/exam-details/:exam_id" component={ExamDetails}/>
-          <Route exact path="/add-question/:exam_id" component={AddQuestion}/>
-          <Route exact path="/add-from-question-pool/:exam_id" component={AddFromQuestionPool}/>
+          <Route exact path="/add-question/:exam_id/:exam_type/:add_type/:ques_id" component={AddQuestion}/>
+          <Route exact path="/add-from-question-pool/:exam_id/:examType" component={AddFromQuestionPool}/>
+          <Route exact path="/exam-explain/:exam_id" component={ExamExplain}/>
+          <Route exact path="/do-exam/:exam_id" component={DoExam}/>
+          <Route exact path="/add-speaking/:exam_id/:exam_type/:add_type/:ques_id" component={AddSpeaking}/>
         </Switch>          
       </div>
     );

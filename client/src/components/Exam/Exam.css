@@ -30,11 +30,19 @@
 .MuiTableCell-head{
     font-weight: 700!important;
 }
-.div-exam-details, .div-exam-questions, .div_exam{
+.div-exam-details, .div-exam-questions, .div_exam, .div-exam-explain{
     border: solid 1px #d4d4d5;
     border-radius: 7px;
     padding: 30px!important;
     background-color: white;
+    min-height: 500px;
+}
+.div-exam-speaking{
+    border: solid 1px #d4d4d5;
+    border-radius: 7px;
+    padding: 30px!important;
+    background-color: white;
+    min-height: 450px;
 }
 .exam_table>.MuiPaper-root{
     box-shadow: none!important;
@@ -45,13 +53,103 @@
     object-fit: cover;
     padding: 0.75rem;
 }
-.result-image-ques{
+.result-image-ques, .result-image-ques-do-exam{
     min-height: 100%;
     max-height: auto;
     width: 100%;
     margin-top:1rem ;
-     display: flex;
+    display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: left;    
 }
+tbody>tr>td{
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.mircophone-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .microphone-icon-container {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-image: linear-gradient(128deg, #c32525, #fbbd09);
+    padding: 6px;
+    margin-right: 20px;
+    position: relative;
+    cursor: pointer;
+    color: white;
+  }
+  .microphone-icon-container.listening::before {
+    content: "";
+    width: 100px;
+    height: 100px;
+    background-color: #ffffff81;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform:translate(-50%, -50%) scale(1.4);
+    border-radius: 50%;
+    animation: listening infinite 1.5s;
+  }
+  @keyframes listening{
+    0%{
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    100%{
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(1.4);
+    }
+  }
+  .microphone-icon-exam {
+    font-size: 27px!important;
+    width: 100%!important;
+    height: 100%!important;
+  }
+  .microphone-status {
+    font-size: 19px;
+    margin-right: 20px;
+    min-width: 215px;
+  }
+  .btn {
+    border: none;
+    padding: 10px 30px;
+    margin-right: 10px;
+    outline: none;
+    cursor: pointer;
+    font-size: 20px;
+    border-radius: 25px;
+    box-shadow: 0px 0px 10px 5px #ffffff1a;
+  }
+  .microphone-result-container {
+    text-align: center;
+    height: auto;  
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  
+  }
+  .microphone-result-text {
+    margin-bottom: 20px;
+    width: 100%;
+    overflow-y: auto;
+    margin-top: 20px;
+    border: 1px solid #edeaea;
+    border-radius: 7px;
+    min-height: 100px;
+    text-align: left;
+    padding: 10px;
+  }
+  .microphone-reset {
+    border: 1px solid #fff;
+    background: none;
+    color: white;
+    width: fit-content;
+  }

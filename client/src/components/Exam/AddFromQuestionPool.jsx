@@ -8,26 +8,34 @@ import { Helmet } from 'react-helmet';
 import MenuDiv from '../MenuDiv/MenuDiv';
 import { useParams } from "react-router-dom";
 import { Container} from 'react-bootstrap';
+import Swal from 'sweetalert2';
+import axios from 'axios';
 
 const cookies = new Cookies();
+cookies.set('user_id', '3', { path: '' });
+cookies.set('user_name', 'Administrator', { path: '' });
+cookies.set('user_role', '1', { path: '' });
+
 const columns = [
-    { field: 'ques_id', title: 'ID', width: 80 },
-    { field: 'ques_text', title: 'Question', width: 300 },
-    { field: 'cre_user', title: 'Author', width: 150 },
-    { field: 'cre_date', title: 'Date', width: 150, type: 'date' }
+    { field: 'ques_id'  , title: 'ID'       , width: 50 },
+    { field: 'ques_text', title: 'Question' , width: 400 },
+    { field: 'user_name', title: 'Author'   , width: 100 },
+    { field: 'cre_date' , title: 'Date'     , width: 100, type: 'date' }
 ]
 
-const AddFromQuestionPool = (props) => {
-    const [filter, setFilter] = useState(false);
-    const [isLoading, setLoading] = useState(true);
-    const [tableData, setTableData] = useState([]);
-    const { exam_id } = useParams();
-    const { user_id } = cookies.get('user_id');
-    const { user_role } = cookies.get('user_role');
-    console.log(cookies.get('user_id'))
+const AddFromQuestionPool = (props) => {    
+    const { exam_id, examType }    = useParams();
+
+    const [question_pool, setQuestionPool] = useState({
+        filter          : false,
+        isLoading       : true,
+        tableData       : [],
+        isDisabled      : true,
+        selectedQuestion: []
+    }); 
 
     const url = "http://localhost/itenglish_capstone/server/public/api/get_question_pool";
-    useEffect(() => {
+    useEffect(() => {        
         fetch(url, {
             method: 'POST',
             headers: {
@@ -35,22 +43,33 @@ const AddFromQuestionPool = (props) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                user_id: cookies.get('user_id')
+                ques_type   : examType,
+                user_id     : cookies.get('user_id'),
+                exam        : exam_id,                
             })
         })
         .then((data) => data.json())
         .then((data) => {
-            setTableData(data.exam);
-            setLoading(false);
+            setQuestionPool(prev => ({
+                ...prev,
+                tableData: data.question_pool,
+                isLoading: false
+            }))
         })
         .catch(error => {
             console.log(error);
-            setLoading(false);
+            setQuestionPool(prev => ({
+                ...prev,
+                isLoading: false
+            }))
         });
     }, []);
 
     const handleChange = () => {
-        setFilter(!filter)
+        setQuestionPool(prev => ({
+            ...prev,
+            filter: !(question_pool.filter)
+        }))
     }
 
     const handleClickEditExam = (data) => {
@@ -61,41 +80,160 @@ const AddFromQuestionPool = (props) => {
         }
     }
 
+    const handleClickAddNewQuestion = () => {
+        try {       
+            if(examType == 1){
+                window.location.href = `/add-question/${exam_id}/${examType}/${0}/${0}`
+            }
+            if(examType == 2){
+                window.location.href = `/add-speaking/${exam_id}/${examType}/${0}/${0}`
+            }         
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleClickAddQuestion = () => {
+        try {
+            let formData = new FormData();
+            formData.append('exam_id', exam_id);
+            formData.append('user_id', cookies.get('user_id'));
+            formData.append('ques_type', examType);
+            formData.append('selected_questions', JSON.stringify(question_pool.selectedQuestion));
+            const url = 'http://localhost/itenglish_capstone/server/public/api/add_from_question_pool';
+                axios({
+                    method  : 'POST',
+                    url     : url,
+                    dataType: 'jsonp',
+                    data    : formData,
+                    config  : {
+                        headers: {
+                            'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+                            'Access-Control-Allow-Origin': 'http://localhost:3000',
+                            'Access-Control-Allow-Credentials': 'true',
+                            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+                        }
+                    }
+                })
+                .then(response => {
+                    var result = response.data.success;   
+                    
+                    setQuestionPool(prev => ({
+                        ...prev,
+                        isLoading: false
+                    }))
+
+                    if(result){
+                        setQuestionPool(prev => ({
+                            ...prev,
+                            tableData: response.data.question_pool
+                        }))
+
+                        Swal.fire({
+                            title               : response.data.message,
+                            icon                : 'success',
+                            confirmButtonColor  : '#3085d6',
+                            confirmButtonText   : 'Go to Exam Detail Page',
+                            showDenyButton      : true,
+                            denyButtonText      : `Continue add new question`,
+                        }).then((results) => {
+                            if (results.isConfirmed) {
+                                window.location.href = `/exam-details/${exam_id}`;                           
+                            }
+                        })
+                    }else{
+                        Swal.fire({
+                            icon    : 'error',
+                            title   : 'Oops...',
+                            text    : response.data.message
+                        })
+                    }
+                })
+                .catch(error => {
+                    setQuestionPool(prev => ({
+                        ...prev,
+                        isLoading: false
+                    }))
+
+                    Swal.fire({
+                        title   : 'Oops...',
+                        text    : 'Server has problem! Please try another time.',
+                        icon    : 'error'
+                    })
+                });
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleSelectedQuestions = (data) => {
+        try {
+            if(data.length == 0){
+                setQuestionPool(prev => ({
+                    ...prev,
+                    isDisabled: true
+                }))
+            }else{
+                setQuestionPool(prev => ({
+                    ...prev,
+                    isDisabled: false
+                }))
+            }
+            setQuestionPool(prev => ({
+                ...prev,
+                selectedQuestion: data
+            }))
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <div className="exam_details pad-top-150">
             <Helmet>
-                <title>ITEnglish | Add questions</title>
+                <title>ITEnglish | Question Pool</title>
             </Helmet>
-            <MenuDiv />
-            <Container className="div_exam">
+            <MenuDiv activeItem={'exams and tests'}/>
+            <Container style={{marginBottom: 20, textAlign: 'right'}}>
+                <Button color='blue' onClick={handleClickAddNewQuestion}>Add new question</Button>
+            </Container>
+            <Container className="div_exam" style={{minHeight: 500, maxHeight: 1000}}>
                 <div className="exam_table">
-                    <Loader active={isLoading} size='big' />
+                    <Loader active={question_pool.isLoading} size='big' />                    
                     <MaterialTable
-                        title='Exams List'
-                        data={tableData}
+                        title='Question Pool'
+                        data={question_pool.tableData}
                         columns={columns}
                         options={{
-                            filtering: filter,
-                            actionsColumnIndex: -1
+                            filtering: question_pool.filter,
+                            actionsColumnIndex: -1,
+                            selection: true,
+                            paging: false,
+                            maxBodyHeight: 800,
                         }}
+                        onSelectionChange={(selectedRows)=>{handleSelectedQuestions(selectedRows)}}
                         onRowClick={(event, rowData) => console.log(rowData)}
                         actions={[
                             {
                                 icon: () => <Checkbox
-                                    checked={filter}
+                                    checked={question_pool.filter}
                                     onChange={handleChange}
                                     inputProps={{ 'aria-lable': 'primary checkbox' }}
                                 />,
                                 tooltip: "Hide/Show Filter option",
                                 isFreeAction: true
-                            },
-                            {
-                                icon: () => <Button color='blue'>Edit</Button>,
-                                tooltip: 'Edit Exam',
-                                onClick: (e, data) => handleClickEditExam(data)
                             }
                         ]}
                     />
+                </div>
+                <div style={{marginTop: 20, textAlign: 'right'}}>
+                    <Button 
+                        color='blue' 
+                        onClick={handleClickAddQuestion}
+                        disabled={question_pool.isDisabled}
+                    >Add selected question to Exam ({exam_id})
+                    </Button>
                 </div>
             </Container>
             <div

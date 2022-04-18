@@ -12,6 +12,7 @@ class QuestionPool extends Model
     protected $fillable =   ['ques_id',
                             'ques_text', 
                             'ques_image',
+                            'ques_type',
                             'cre_date', 
                             'cre_user',
                             'upd_date',

@@ -12,14 +12,14 @@ import Swal from 'sweetalert2'
 const cookies       = new Cookies();
 const answer_arr    = ['A', 'B', 'C', 'D', 'E', 'F','G', 'H'];
 const option_add_ans= [
-    {key: '1', value: '1', text: 'Add new question'},
-    {key: '2', value: '2', text: 'Add question from Question pool'},
+    {key: '1', value: '1', text: 'Add new question/speaking'},
+    {key: '2', value: '2', text: 'Add question/speaking from Question pool'},
 ]
 
 const ExamDetails = (props) => {
     try {
-        const { exam_id }  = useParams();
-        const [exam, setExam] = useState({
+        const { exam_id }       = useParams();
+        const [exam, setExam]   = useState({
             typeAddQuestion : '',
             examInfor       : [],
             majors          : [],
@@ -38,7 +38,10 @@ const ExamDetails = (props) => {
             examName        : '',
             examDesc        : '',
             itTypeID        : '',
-            examType        : ''
+            examType        : '',
+            setDisableSelect: true,
+            exam_id         : '',
+            isEditQuestion  : ''
         })
 
         const url = "http://localhost/itenglish_capstone/server/public/api/refer_exam";
@@ -61,30 +64,46 @@ const ExamDetails = (props) => {
                 }
             })
             .then(response => {
-                let exams       = response.data.exam;
-                let answer      = response.data.answers;
-                let question    = response.data.questions;
+                let exams       = [];
+                let answer      = [];
+                let question    = [];              
                 let major       = response.data.majors;
                 let exam_types  = response.data.exam_types;
+
                 setExam(prev => ({
                     ...prev,
-                    examInfor   : exams, 
-                    answers     : answer, 
-                    questions   : question, 
+                    isLoading   : false,
                     majors      : major, 
                     examTypes   : exam_types
                 }))
 
-                exams.map((key)=>{
+                if(exam_id != 0){
+                    exams       = response.data.exam;
+                    answer      = response.data.answers;
+                    question    = response.data.questions;
+
+                    exams.map((key)=>{
+                        setExam(prev => ({
+                            ...prev,
+                            examName        : key.exam_name,
+                            examDesc        : key.exam_desc,
+                            itTypeID        : key.it_type_id,
+                            examType        : key.type_id,
+                            isLoading       : false,
+                            setDisableSelect: false
+                        }))
+                    })
+
                     setExam(prev => ({
                         ...prev,
-                        examName    : key.exam_name,
-                        examDesc    : key.exam_desc,
-                        itTypeID    : key.it_type_id,
-                        examType    : key.type_id,
-                        isLoading   : false
+                        examInfor   : exams, 
+                        answers     : answer, 
+                        questions   : question, 
+                        majors      : major, 
+                        examTypes   : exam_types,
+                        exam_id     : exam_id
                     }))
-                })
+                }
             })
             .catch(error => {
                 setExam(prev => ({
@@ -139,11 +158,13 @@ const ExamDetails = (props) => {
         
         const handleClickMoveToAddQuestion = (e) => {
             try {
+                //manual add
                 if(exam.typeAddQuestion == '1'){
-                    window.location.href = `/add-question/${exam_id}`
+                    window.location.href = `/add-question/${exam.exam_id}/${exam.examType}/${1}/${0}`                    
                 }
+                //choose from question pool
                 if(exam.typeAddQuestion == '2'){
-                    window.location.href = `/add-from-question-pool/${exam_id}`
+                    window.location.href = `/add-from-question-pool/${exam.exam_id}/${exam.examType}`                   
                 }
             } catch (error) {
                 console.log(error)
@@ -169,7 +190,7 @@ const ExamDetails = (props) => {
                 formData.append('exam_major', exam.itTypeID);
                 formData.append('exam_type', exam.examType);
                 formData.append('user_id', exam.user_id);
-                formData.append('type_save', 1);
+                formData.append('type_save', exam_id == 0? 0 : 1);
 
                 const url_save_exam = 'http://localhost/itenglish_capstone/server/public/api/save_exam';
 
@@ -196,12 +217,18 @@ const ExamDetails = (props) => {
                     }))
 
                     if(result){
+                        setExam(prev => ({
+                            ...prev,
+                            setDisableSelect: false,
+                            exam_id: response.data.exam_id
+                        }))
+
                         Swal.fire({
                             icon                : 'success',
                             title               : response.data.message,
                             showConfirmButton   : false,
                             timer               : 1500
-                        })
+                        })                        
                     }else{
                         Swal.fire({
                             icon    : 'error',
@@ -312,14 +339,110 @@ const ExamDetails = (props) => {
 
         const handleReferImages = (images, classAdd) => {
             try {
-                let images_arr      = images.split(",");
-                let divTag          = document.createElement('div');
-                divTag.className    = 'result-image-ques';
-                divTag.innerHTML    = '';                
-                for(let i = 0; i < images_arr.length; i++){
-                    divTag.innerHTML += '<img class="ui medium image ques-image-style" src="/images/exam/' + images_arr[i] + '" alt="Improve your Vocabulary">';
-                }
-                document.getElementsByClassName(classAdd)[0].appendChild(divTag);
+                setTimeout(() => {
+                    let images_arr      = images.split(",");
+                    let divTag          = document.createElement('div');
+                    divTag.className    = 'result-image-ques';
+                    divTag.innerHTML    = '';                
+                    for(let i = 0; i < images_arr.length; i++){
+                        divTag.innerHTML += '<img class="ui medium image ques-image-style" src="/images/exam/' + images_arr[i] + '" alt="Improve your Vocabulary">';
+                    }
+                    document.getElementsByClassName(classAdd)[0].innerHTML = '';
+                    document.getElementsByClassName(classAdd)[0].appendChild(divTag);
+                }, 0);                
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        const handleClickEditQuestion = (e, data) => {
+            console.log(data)
+        }
+
+        const handleRemoveQuestion = (data) => {
+            try {
+                Swal.fire({
+                    title               : 'Are you sure want to remove this question from this exam?',
+                    text                : "You won't be able to revert this!",
+                    icon                : 'warning',
+                    showCancelButton    : true,
+                    confirmButtonColor  : '#3085d6',
+                    cancelButtonColor   : '#d33',
+                    confirmButtonText   : 'Yes, delete it!'
+                })
+                .then((result1) => {
+                    if (result1.isConfirmed) {
+                        setExam(prev => ({
+                            ...prev,
+                            isLoading: true
+                        }))
+    
+                        let formData = new FormData();
+                        formData.append('exam_id', exam_id);
+                        formData.append('ques_id', data);
+    
+                        const url_delete_exam = 'http://localhost/itenglish_capstone/server/public/api/remove_question';
+    
+                        axios({
+                            method  : 'POST',
+                            url     : url_delete_exam,
+                            dataType: 'jsonp',
+                            data    : formData,
+                            config  : {
+                                headers: {
+                                    'Content-Type': 'multipart/form-data',
+                                    'Access-Control-Allow-Origin': 'http://localhost:3000',
+                                    'Access-Control-Allow-Credentials': 'true',
+                                    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+                                }
+                            }
+                        })
+                        .then(response => {
+                            var result2 = response.data.success;   
+                            
+                            setExam(prev => ({
+                                ...prev,
+                                isLoading: false
+                            }))
+    
+                            if(result2){
+                                let answer      = response.data.answers;
+                                let question    = response.data.questions;
+
+                                setExam(prev => ({
+                                    ...prev,
+                                    answers     : answer, 
+                                    questions   : question
+                                }))
+
+                                Swal.fire({
+                                    title               : response.data.message,
+                                    icon                : 'success',
+                                    showCancelButton    : true,
+                                    cancelButtonColor   : '#d33',
+                                })
+                            }else{
+                                Swal.fire({
+                                    icon    : 'error',
+                                    title   : 'Oops...',
+                                    text    : 'Something went wrong!'
+                                })
+                            }
+                        })
+                        .catch(error => {
+                            setExam(prev => ({
+                                ...prev,
+                                isLoading: false
+                            }))
+    
+                            Swal.fire({
+                                title   : 'Oops...',
+                                text    : 'Server has problem! Please try another time.',
+                                icon    : 'error'
+                            })
+                        });    
+                    }
+                })
             } catch (error) {
                 console.log(error)
             }
@@ -330,7 +453,7 @@ const ExamDetails = (props) => {
                 <Helmet>
                     <title>ITEnglish | Exam details</title>
                 </Helmet>
-                <MenuDiv />
+                <MenuDiv activeItem={'exams and tests'}/>
                 <Loader active={exam.isLoading} size='big'/>
                 <Container className='div-exam-details mar-bot-20'>
                     <Label size='big' color='teal' tag className='mar-bot-20'>Exam Information</Label>
@@ -341,7 +464,7 @@ const ExamDetails = (props) => {
                                 name='exam_id'
                                 label='Exam ID'
                                 control={Input}
-                                value={exam_id}
+                                value={exam.exam_id}
                                 disabled
                             />
                         </Form.Group>
@@ -393,6 +516,7 @@ const ExamDetails = (props) => {
                                     placeholder='Select type'
                                     onChange={handleOnChangeSelectAddQuestion}
                                     value={exam.optionAddQues}
+                                    disabled={exam.setDisableSelect}
                                 />
                                 <Form.Button
                                     className='btn-add-question'
@@ -417,10 +541,23 @@ const ExamDetails = (props) => {
                             <div style={{ marginTop: 20 }}>
                                 <Button 
                                     className='btn-edit-question' 
-                                    color='blue'>Edit
+                                    color='blue'
+                                    onClick={(e)=>{
+                                        //multichoice
+                                        if(exam.examType == '1'){
+                                            window.location.href = `/add-question/${exam.exam_id}/${exam.examType}/${1}/${ques.ques_id}`
+                                        }
+                                        //speaking
+                                        if(exam.examType == '2'){
+                                            window.location.href = `/add-speaking/${exam.exam_id}/${exam.examType}/${1}/${ques.ques_id}`
+                                        }
+                                    }}
+                                    >Edit
                                 </Button><Button 
                                     className='btn-delete-question' 
-                                    color='red'>Delete
+                                    color='red'
+                                    onClick={(e)=>{handleRemoveQuestion(ques.ques_id)}}
+                                    >Delete
                                 </Button><Label 
                                     style={{ marginBottom: 10 }}>Question {index + 1}
                                 </Label>  ({ques.ques_point}) points
@@ -428,9 +565,9 @@ const ExamDetails = (props) => {
                                 <p>{ques.ques_text}</p>
                                 <div 
                                     style={{ marginBottom: 10 }} 
-                                    className={'ques_' + index}
+                                    className={'ques_' + index + ' image-div'}
                                 >
-                                    {ques.ques_image != null? 
+                                    {(ques.ques_image != null && ques.ques_image != '') ? 
                                     handleReferImages(ques.ques_image, 'ques_' + index) 
                                     :''}
                                 </div>                                                                

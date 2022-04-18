@@ -1,0 +1,307 @@
+import React, { useState, useEffect, createElement } from 'react';
+import { Button, Loader, Container, Label, Radio} from 'semantic-ui-react';
+import { Helmet } from 'react-helmet';
+import './Exam.css';
+import { useParams } from "react-router-dom";
+import MenuDiv from '../MenuDiv/MenuDiv';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import SpeechToText from './SpeechToText';
+
+const answer_arr    = ['A', 'B', 'C', 'D', 'E', 'F','G', 'H'];
+
+const DoExam = (props) => {
+    const { exam_id }               = useParams();
+    const [examInfo, setExamInfo]   = useState({
+        answers     : [], 
+        questions   : [],
+        isLoading   : true,
+        exam_title  : '',
+        checked     : [],
+        correct_ans : [],
+        exam_type   : ''
+    });
+
+    const url = "http://localhost/itenglish_capstone/server/public/api/refer_do_exam";
+
+    useEffect(async () => {
+        try {
+            let formData = new FormData();
+            formData.append('exam_id', exam_id);
+            await axios({
+                method: 'POST',
+                url: url,
+                dataType: 'jsonp',
+                data: formData,
+                config: {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Access-Control-Allow-Origin': 'http://localhost:3000',
+                        'Access-Control-Allow-Credentials': 'true',
+                        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+                    }
+                }
+            })
+            .then(response => {
+                var result = response.data.success;
+
+                setExamInfo(prev => ({
+                    ...prev,
+                    isLoading: false
+                }))
+
+                if(result){
+                    let exam_title = response.data.exam_title;
+                    let exam_type  = response.data.exam_type;
+                    exam_title.map((key)=>{
+                        setExamInfo(prev => ({
+                            ...prev,
+                            exam_title  : key.exam_name,
+                        })) 
+                    })
+
+                    exam_type.map((key)=>{
+                        setExamInfo(prev => ({
+                            ...prev,
+                            exam_type  : key.type_id,
+                        })) 
+                    })
+
+                    setExamInfo(prev => ({
+                        ...prev,
+                        questions   : response.data.questions
+                    }))
+
+                    if(exam_type == 1) {
+                        setExamInfo(prev => ({
+                            ...prev,
+                            answers     : exam_type == 1 ? response.data.answers: [],
+                            checked     : exam_type == 1 ? handleSetChecked(response.data.answers): [],
+                            correct_ans : exam_type == 1 ? handleSetCorrectAns(response.data.answers): []
+                        }))
+                    }                    
+                }else{
+                    setExamInfo(prev => ({
+                        ...prev,
+                        isLoading: false
+                    }))
+
+                    Swal.fire({
+                        icon    : 'error',
+                        title   : 'Oops...',
+                        text    : 'Something went wrong!'
+                    })
+                }
+            })
+            .catch(error => {         
+                setExamInfo(prev => ({
+                    ...prev,
+                    isLoading: false
+                }))
+
+                Swal.fire({
+                    icon    : 'error',
+                    title   : 'Oops...',
+                    text    : error.data.message
+                })
+            });
+        } catch (error) {
+            console.log(error)
+        }        
+    }, []);
+
+    const handleSetChecked = (data) =>{
+        let ans_num = data.length;
+        let temp_arr = [];
+        for(let i = 0; i < ans_num; i++){
+            temp_arr.push({
+                ques_id: '',
+                ans_id: '',
+                ques_point: 0
+            });
+        }
+        return temp_arr;
+    }
+
+    const handleSetCorrectAns = (data) => {
+        let ans_num = data;
+        let temp_arr = [];
+        for (let i = 0; i < ans_num.length; i++) {
+            for (let j = 0; j < 4; j++) {
+                if (ans_num[i][j].is_correct_ans == '1') {
+                    temp_arr.push({
+                        ques_id: ans_num[i][j].ques_id,
+                        ans_id: ans_num[i][j].ans_id,
+                        is_correct: ans_num[i][j].is_correct_ans
+                    })
+                }
+            }
+        }
+        return temp_arr;
+    }
+
+    const handleOnChangeChecked = (index, ans_id, ques_id, ques_point) => (event) => {
+        try {
+            let tmp_arr = examInfo.checked;
+            for(let i = 0; i < tmp_arr.length; i++){
+                if(i == index){
+                    tmp_arr[i] = {
+                        ques_id: ques_id,
+                        ans_id: ans_id,
+                        ques_point: ques_point
+                    }
+                }
+            }
+            
+            setExamInfo(prev => ({
+                ...prev,
+                checked: tmp_arr
+            }));
+        } catch (error) {
+            console.log(error)
+        }        
+    }
+
+    const handleClickSubmit = () => {
+        try {
+            Swal.fire({
+                title               : 'Are you sure want to submit the exam?',
+                // text                : "You won't be able to revert this!",
+                icon                : 'question',
+                showCancelButton    : true,
+                confirmButtonColor  : '#3085d6',
+                cancelButtonColor   : '#d33',
+                confirmButtonText   : 'Submit',
+                cancelButtonText    : 'No, I want to continue.'
+            }).then((results1) => {
+                if (results1.isConfirmed) {
+                    let final_point = 0;
+                    let max_point = 0;
+                    console.log(examInfo.checked);
+                    console.log(examInfo.correct_ans)
+                    for(let i = 0; i < examInfo.checked.length; i++){
+                        max_point += parseFloat(examInfo.checked[i].ques_point);
+                        if( examInfo.checked[i].ques_id == examInfo.correct_ans[i].ques_id &&
+                            examInfo.checked[i].ans_id == examInfo.correct_ans[i].ans_id
+                        ){
+                            final_point += parseFloat(examInfo.checked[i].ques_point);
+                        }
+                    }
+
+                    Swal.fire({
+                        imageUrl: final_point < (max_point/2) ? '/images/try_next.png' : '/images/congra.jpg',
+                        imageWidth: final_point < (max_point/2) ? 150 : 400,
+                        imageHeight: 150,
+                        imageAlt: 'Custom image',
+                        title                : 'Your point is: ' + final_point + '/' + max_point,
+                        text                : final_point < (max_point/2) ? 'Better luck next time!' : 'Very good!',
+                        confirmButtonColor  : '#3085d6',
+                        confirmButtonText   : 'Go to Rank page',
+                        showDenyButton      : true,
+                        denyButtonText      : `Do another exam`,
+                    }).then((results) => {
+                        if (results.isConfirmed) {
+                                                        
+                        }
+                        if(results.isDenied){
+                            window.location.href = `/exam`
+                        }
+                    })                        
+                }
+            })            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleReferImages = (images, parentDiv) => {
+        try {
+            // setTimeout(() => {
+                let images_arr = images.split(",");
+                let divTag = document.createElement('div');
+                divTag.className = 'result-image-ques-do-exam';              
+                divTag.innerHTML    = '';                
+                for (let i = 0; i < images_arr.length; i++) {
+                    divTag.innerHTML += '<img class="ui medium image ques-image-style" src="/images/exam/' + images_arr[i] + '" alt="Improve your Vocabulary">';
+                }
+                document.getElementsByClassName(parentDiv)[0].appendChild(divTag)
+            // }, 0);                 
+        } catch (error) {
+            console.log(error)
+        }
+    }   
+
+    return (
+        <div className="exam-explain pad-top-150">
+            <Helmet>
+                <title>ITEnglish | {examInfo.exam_title}</title>
+            </Helmet>
+            <MenuDiv activeItem={'exams and tests'} />
+            <Loader active={examInfo.isLoading} size='big'/>
+            <Container className='div-exam-explain mar-bot-20'>
+                {examInfo.exam_type == 1 ?
+                    examInfo.questions.map((ques, index) => {
+                        return (
+                            <div style={{ marginTop: 20 }}>
+                                <Label
+                                    style={{ marginBottom: 10 }}>Question {index + 1}
+                                </Label>  ({ques.ques_point}) points
+                                <p hidden>{ques.ques_id}</p>
+                                <p>{ques.ques_text}</p>
+                                <div
+                                    style={{ marginBottom: 10 }}
+                                    className={'ques-' + index}
+                                >      
+                                {/* {(ques.ques_image != null && ques.ques_image != '') ?
+                                handleReferImages(ques.ques_image, 'ques-' + index)
+                                : ''}                           */}
+                                </div>                            
+                                {examInfo.answers[index].map((ans, idx) => {
+                                    return (
+                                        <div>
+                                            <p hidden>{ans.ans_id}</p>
+                                            <Radio
+                                                label={answer_arr[idx] + '. ' + ans.ans_desc}
+                                                name={'radioGroup' + index}
+                                                value={ans.ans_id}
+                                                checked={examInfo.checked[index].ans_id === ans.ans_id}
+                                                onChange={handleOnChangeChecked(index, ans.ans_id, ques.ques_id, ques.ques_point)}
+                                            />
+                                        </div>
+                                    )
+                                })}                            
+                            </div>
+                        )
+                    })
+                    :
+                    examInfo.questions.map((ques, index) => {
+                        return(
+                            <div style={{ marginTop: 20 }}>
+                                <Label
+                                    style={{ marginBottom: 10 }}
+                                >Please read this paragraph below
+                                </Label>  ({ques.ques_point}) points
+                                <p hidden>{ques.ques_id}</p>
+                                <p>{ques.ques_text}</p>
+                                <SpeechToText quesID={ques.ques_id}/>                                                            
+                            </div>
+                        )
+                    })
+                }
+                                
+                <Button style={{marginTop: 20}} color='yellow' onClick={handleClickSubmit}>Submit</Button>
+            </Container>
+            <div
+                style={{
+                    textAlign       : 'center',
+                    paddingTop      : 80,
+                    paddingBottom   : 20
+                }}
+            >
+                <p>© ITEnglish Copyright 2022</p>
+            </div>
+        </div>
+    )
+}
+
+export default DoExam

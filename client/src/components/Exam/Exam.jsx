@@ -3,6 +3,7 @@ import { Container} from 'react-bootstrap';
 import './Exam.css';
 import MenuDiv from '../MenuDiv/MenuDiv';
 import ExamTable from '../Exam/ExamTable';
+import { Button} from 'semantic-ui-react';
 import { Helmet } from 'react-helmet';
 import Cookies from 'universal-cookie';
 
@@ -19,6 +20,8 @@ class Exam extends Component {
     constructor(props) {
         super(props);
 
+        this.handleClickAddExam = this.handleClickAddExam.bind(this);
+
         this.state = {
             activeItem  : 'exams and tests',
             user_id     : cookies.get('user_id'),
@@ -27,6 +30,9 @@ class Exam extends Component {
         };  
     }
 
+    handleClickAddExam = (e) =>{
+        window.location.href = `/exam-details/${0}`
+    }
     
     render() {
         const { activeItem, value } = this.state        
@@ -37,6 +43,9 @@ class Exam extends Component {
                     <title>ITEnglish | Exams and tests</title>
                 </Helmet>
                 <MenuDiv activeItem={this.state.activeItem}/>
+                <Container style={{marginBottom: 20, textAlign: 'right'}}>
+                    <Button color='yellow' onClick={this.handleClickAddExam}>Add new exam</Button>
+                </Container>
                 <Container className="div_exam">
                     <div>
                         <ExamTable/>
