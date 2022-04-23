@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import MaterialTable from '@material-table/core';
-import { Checkbox } from '@material-ui/core';
 import { Button, Loader, Container, Header, Table} from 'semantic-ui-react';
 import { Helmet } from 'react-helmet';
 import './Exam.css';

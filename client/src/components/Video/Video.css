@@ -1,0 +1,22 @@
+.pad-top-150{
+    padding-top: 150px!important;
+    background-color: #edeaea;
+}
+.div-video{
+    border: solid 1px #d4d4d5;
+    border-radius: 7px;
+    padding: 30px!important;
+    background-color: white;
+    min-height: 500px;
+}
+.card-group{
+    justify-content: center!important;
+}
+.ui.card>.content>.header, .ui.cards>.card>.content>.header{
+    display: contents!important;
+}
+.video-desc{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

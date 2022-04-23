@@ -35,11 +35,21 @@ class MenuDiv extends Component {
                         as={Link}
                         to='/home'
                     />
-                    <Dropdown item text='Learn' className='pad-bot-26'>
+                    <Dropdown                        
+                        item text='Learn' 
+                        className={'pad-bot-26' + ' ' + (this.props.activeItem === 'learn' ? 'active' : '')}
+                        active={this.props.activeItem === 'learn'}                        
+                    >
                         <Dropdown.Menu>
                             <Dropdown.Item>Vocabulary</Dropdown.Item>
                             <Dropdown.Item>Join a Classroom</Dropdown.Item>
-                            <Dropdown.Item>Video with Strangers</Dropdown.Item>
+                            <Dropdown.Item
+                                as={Link}
+                                to='/video'
+                                onClick={this.handleItemClick}
+                                name='learn' 
+                            >Video with Strangers
+                            </Dropdown.Item>
                             <Dropdown.Item>Supporting Documents</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
@@ -52,8 +62,8 @@ class MenuDiv extends Component {
                         to='/exam'
                     />
                     <Menu.Item
-                        name='help'
-                        active={this.props.activeItem === 'help'}
+                        name='rank'
+                        active={this.props.activeItem === 'rank'}
                         onClick={this.handleItemClick}
                         className='pad-bot-26'
                     />

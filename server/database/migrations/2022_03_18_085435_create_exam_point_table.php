@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('exam_point', function (Blueprint $table) {
             $table->integer('exam_id')->unsigned();
             $table->integer('user_id')->unsigned();
-            $table->primary(['exam_id', 'user_id']);
             $table->decimal('point', $precision = 8, $scale = 2);
             $table->dateTimeTz('cre_date', $precision = 0);
             $table->integer('cre_user')->unsigned();

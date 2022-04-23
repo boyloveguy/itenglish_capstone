@@ -12,6 +12,7 @@ import AddFromQuestionPool from './components/Exam/AddFromQuestionPool';
 import ExamExplain from './components/Exam/ExamExplain.jsx';
 import DoExam from './components/Exam/DoExam.jsx';
 import AddSpeaking from './components/Exam/AddSpeaking.jsx';
+import VideoContainer from './containers/VideoContainer';
 
 class App extends Component{
   render(){
@@ -30,6 +31,7 @@ class App extends Component{
           <Route exact path="/exam-explain/:exam_id" component={ExamExplain}/>
           <Route exact path="/do-exam/:exam_id" component={DoExam}/>
           <Route exact path="/add-speaking/:exam_id/:exam_type/:add_type/:ques_id" component={AddSpeaking}/>
+          <Route exact path="/video" component={VideoContainer}/>
         </Switch>          
       </div>
     );

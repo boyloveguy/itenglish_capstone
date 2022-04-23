@@ -6,6 +6,7 @@ use App\Models\Answer;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Exam;
+use App\Models\ExamPoint;
 use App\Models\QuestionPool;
 use App\Models\Question;
 use Illuminate\Support\Facades\Hash;
@@ -616,6 +617,30 @@ class ExamController extends Controller
             return response()->json(array(
                 'success' => true, 
                 'message' => 'Save successfull!'
+            ), 200);
+        } catch (\Exception $e) {
+            return response()->json(array(
+                'success' => false, 
+                'message' => $e->getMessage()
+            ), 200);
+        }
+    }
+
+    function submit_exam_point(Request $res){
+        try {
+            $exam_point             = new ExamPoint;
+            $exam_point->exam_id    = $res->input('exam_id');
+            $exam_point->user_id    = $res->input('user_id');
+            $exam_point->point      = $res->input('point');
+            $exam_point->cre_user   = $res->input('user_id');
+            $exam_point->cre_date   = Carbon::now()->toDateTimeString();
+            $exam_point->upd_user   = null;
+            $exam_point->upd_date   = null;
+            $exam_point->save();
+
+            return response()->json(array(
+                'success' => true, 
+                'message' => 'Submit Point successfull!'
             ), 200);
         } catch (\Exception $e) {
             return response()->json(array(

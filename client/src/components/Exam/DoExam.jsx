@@ -7,7 +7,9 @@ import MenuDiv from '../MenuDiv/MenuDiv';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import SpeechToText from './SpeechToText';
+import Cookies from 'universal-cookie';
 
+const cookies       = new Cookies();
 const answer_arr    = ['A', 'B', 'C', 'D', 'E', 'F','G', 'H'];
 
 const DoExam = (props) => {
@@ -53,6 +55,7 @@ const DoExam = (props) => {
                 if(result){
                     let exam_title = response.data.exam_title;
                     let exam_type  = response.data.exam_type;
+                    let temp_type = '';
                     exam_title.map((key)=>{
                         setExamInfo(prev => ({
                             ...prev,
@@ -65,6 +68,8 @@ const DoExam = (props) => {
                             ...prev,
                             exam_type  : key.type_id,
                         })) 
+
+                        temp_type = key.type_id;
                     })
 
                     setExamInfo(prev => ({
@@ -72,12 +77,12 @@ const DoExam = (props) => {
                         questions   : response.data.questions
                     }))
 
-                    if(exam_type == 1) {
+                    if(temp_type == 1) {
                         setExamInfo(prev => ({
                             ...prev,
-                            answers     : exam_type == 1 ? response.data.answers: [],
-                            checked     : exam_type == 1 ? handleSetChecked(response.data.answers): [],
-                            correct_ans : exam_type == 1 ? handleSetCorrectAns(response.data.answers): []
+                            answers     : response.data.answers,
+                            checked     : handleSetChecked(response.data.answers),
+                            correct_ans : handleSetCorrectAns(response.data.answers)
                         }))
                     }                    
                 }else{
@@ -166,7 +171,6 @@ const DoExam = (props) => {
         try {
             Swal.fire({
                 title               : 'Are you sure want to submit the exam?',
-                // text                : "You won't be able to revert this!",
                 icon                : 'question',
                 showCancelButton    : true,
                 confirmButtonColor  : '#3085d6',
@@ -176,24 +180,35 @@ const DoExam = (props) => {
             }).then((results1) => {
                 if (results1.isConfirmed) {
                     let final_point = 0;
-                    let max_point = 0;
-                    console.log(examInfo.checked);
-                    console.log(examInfo.correct_ans)
-                    for(let i = 0; i < examInfo.checked.length; i++){
-                        max_point += parseFloat(examInfo.checked[i].ques_point);
-                        if( examInfo.checked[i].ques_id == examInfo.correct_ans[i].ques_id &&
-                            examInfo.checked[i].ans_id == examInfo.correct_ans[i].ans_id
-                        ){
-                            final_point += parseFloat(examInfo.checked[i].ques_point);
+                    let max_point   = 0;
+
+                    if(examInfo.exam_type == 1){
+                        for(let i = 0; i < examInfo.checked.length; i++){
+                            max_point += parseFloat(examInfo.checked[i].ques_point);
+                            if( examInfo.checked[i].ques_id == examInfo.correct_ans[i].ques_id &&
+                                examInfo.checked[i].ans_id == examInfo.correct_ans[i].ans_id
+                            ){
+                                final_point += parseFloat(examInfo.checked[i].ques_point);
+                            }
                         }
-                    }
+                    }else{
+                        let result_text         = document.getElementsByClassName('microphone-result-text')[0].innerHTML;
+                        let ques_text           = document.getElementsByClassName('ques-text')[0].innerHTML;
+                        let stringSimilarity    = require("string-similarity");
+                        let similarity          = stringSimilarity.compareTwoStrings(result_text, ques_text);
+                        max_point               = 100;
+                        final_point             = Math.round(similarity * 100);
+                    }                    
+                    
+                    //store user exam point
+                    handleSubmitExamPoint(final_point);
 
                     Swal.fire({
-                        imageUrl: final_point < (max_point/2) ? '/images/try_next.png' : '/images/congra.jpg',
-                        imageWidth: final_point < (max_point/2) ? 150 : 400,
-                        imageHeight: 150,
-                        imageAlt: 'Custom image',
-                        title                : 'Your point is: ' + final_point + '/' + max_point,
+                        imageUrl            : final_point < (max_point/2) ? '/images/try_next.png' : '/images/congra.jpg',
+                        imageWidth          : final_point < (max_point/2) ? 150 : 400,
+                        imageHeight         : 150,
+                        imageAlt            : 'Custom image',
+                        title               : 'Your point is: ' + final_point + '/' + max_point,
                         text                : final_point < (max_point/2) ? 'Better luck next time!' : 'Very good!',
                         confirmButtonColor  : '#3085d6',
                         confirmButtonText   : 'Go to Rank page',
@@ -211,6 +226,64 @@ const DoExam = (props) => {
             })            
         } catch (error) {
             console.log(error)
+        }
+    }
+
+    const handleSubmitExamPoint = (point) => {
+        try {
+            setExamInfo(prev => ({
+                ...prev,
+                isLoading: true
+            }))
+
+            let formData = new FormData();
+            formData.append('exam_id', exam_id);
+            formData.append('user_id', cookies.get('user_id'));
+            formData.append('point', point);
+
+            const url = 'http://localhost/itenglish_capstone/server/public/api/submit_exam_point';
+            axios({
+                method  : 'POST',
+                url     : url,
+                dataType: 'jsonp',
+                data    : formData,
+                config  : {
+                    headers: {
+                        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+                        'Access-Control-Allow-Origin': 'http://localhost:3000',
+                        'Access-Control-Allow-Credentials': 'true',
+                        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+                    }
+                }
+            })
+            .then(response => {
+                var result = response.data.success;   
+                
+                setExamInfo(prev => ({
+                    ...prev,
+                    isLoading: false
+                }))
+
+                if(result){
+                    console.log(response.data.message)
+                }else{
+                    console.log(response.data.message)
+                }
+            })
+            .catch(error => {
+                setExamInfo(prev => ({
+                    ...prev,
+                    isLoading: false
+                }))
+
+                Swal.fire({
+                    title   : 'Oops...',
+                    text    : 'Server has problem! Please try another time.',
+                    icon    : 'error'
+                })
+            });
+        } catch (error) {
+            console.log(error);
         }
     }
 
@@ -248,15 +321,17 @@ const DoExam = (props) => {
                                 </Label>  ({ques.ques_point}) points
                                 <p hidden>{ques.ques_id}</p>
                                 <p>{ques.ques_text}</p>
-                                <div
+                                {/* <div
                                     style={{ marginBottom: 10 }}
                                     className={'ques-' + index}
                                 >      
-                                {/* {(ques.ques_image != null && ques.ques_image != '') ?
-                                handleReferImages(ques.ques_image, 'ques-' + index)
-                                : ''}                           */}
-                                </div>                            
-                                {examInfo.answers[index].map((ans, idx) => {
+                                    {(ques.ques_image != null && ques.ques_image != '') ?
+                                    handleReferImages(ques.ques_image, 'ques-' + index)
+                                : ''}
+                                </div>                             */}
+                                {
+                                examInfo.answers.length > 0 ? 
+                                examInfo.answers[index].map((ans, idx) => {
                                     return (
                                         <div>
                                             <p hidden>{ans.ans_id}</p>
@@ -269,7 +344,9 @@ const DoExam = (props) => {
                                             />
                                         </div>
                                     )
-                                })}                            
+                                })
+                                : ''
+                                }                            
                             </div>
                         )
                     })
@@ -282,7 +359,7 @@ const DoExam = (props) => {
                                 >Please read this paragraph below
                                 </Label>  ({ques.ques_point}) points
                                 <p hidden>{ques.ques_id}</p>
-                                <p>{ques.ques_text}</p>
+                                <p className='ques-text'>{ques.ques_text}</p>
                                 <SpeechToText quesID={ques.ques_id}/>                                                            
                             </div>
                         )
