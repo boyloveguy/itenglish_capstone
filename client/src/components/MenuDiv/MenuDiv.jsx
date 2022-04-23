@@ -91,4 +91,4 @@ class MenuDiv extends Component {
     }
 }
 
-export default MenuDiv
+export default MenuDiv;

@@ -38,3 +38,15 @@
 .user-name-menu{
     width: 165px;
 }
+
+.btn-sign-out{
+    border: 0 !important;
+    background-color: white !important;
+    color: black !important;
+   font-size: 18px !important;
+}
+
+a.my-profile{
+    color: black !important;
+    text-decoration: none;
+}

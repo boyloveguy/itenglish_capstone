@@ -1,0 +1,70 @@
+.div-my-profile {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.form-my-profile {
+  position: absolute;
+  width: 80%;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 30%;
+  border: 1px solid rgb(243, 237, 237);
+  border-radius: 7px;
+  padding: 30px;
+  top: 15%;
+}
+.div-right-8{
+    position: relative;
+}
+.div-right-8 .row {
+  margin: 35px 10px;
+}
+
+.div-left-4 .div-img {
+  position: relative;
+  width: 50%;
+  height: 200px;
+  border: 1px solid;
+  margin: 10px;
+  padding: 0;
+}
+
+.div-left-4 .div-img img {
+  width: 100%;
+  height: 100%;
+}
+
+.div-left-4 .div-img div {
+  text-align: center;
+}
+
+.div-left-4 h4 {
+  text-align: center;
+}
+.div-left-4 .div-input {
+  width: 50%;
+  margin: 10px;
+}
+
+.div-left-4 .text-center.card {
+  width: 80%;
+  margin: 0px auto;
+  margin-top: 45px;
+}
+
+.button-my-profile {
+  width: max-content;
+  background-color: #fbbd08 !important;
+  color: white !important;
+  border: #fbbd08 !important;
+}
+.profile-validation{
+  display: none;
+  position: absolute;
+  margin: 5px 0;
+  font-weight: 500;
+  font-size: 13px;
+  color: red;
+}
