@@ -8,8 +8,8 @@ use Laravel\Passport\HasApiTokens;
 
 class Users extends Model
 {
-    protected $table    = 'user';
-    protected $fillable =   ['user_id', 
+    protected $table    = 'users';
+    protected $fillable =   ['id', 
                             'user_name', 
                             'user_fname', 
                             'user_lname', 

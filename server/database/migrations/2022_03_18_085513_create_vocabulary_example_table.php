@@ -13,16 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('class_member', function (Blueprint $table) {
-            $table->integer('class_id')->unsigned();
-            $table->integer('user_id')->unsigned();
+        Schema::create('vocabulary_example', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('voc_id');
+            $table->string('example', 1000);
             $table->dateTimeTz('cre_date', $precision = 0);
             $table->integer('cre_user')->unsigned();
             $table->dateTimeTz('upd_date', $precision = 0);
             $table->integer('upd_user')->unsigned();
-            $table->primary(['class_id', 'user_id']);
-            $table->foreign('class_id')->references('class_id')->on('classroom')->onUpdate('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
+            $table->foreign('voc_id')->references('voc_id')->on('vocabulary')->onUpdate('cascade');
             $table->foreign('cre_user')->references('id')->on('users')->onUpdate('cascade');
             $table->foreign('upd_user')->references('id')->on('users')->onUpdate('cascade');
         });
@@ -35,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('class_member');
+        Schema::dropIfExists('vocabulary_example');
     }
 };

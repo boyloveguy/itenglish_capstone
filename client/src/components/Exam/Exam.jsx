@@ -8,13 +8,6 @@ import { Helmet } from 'react-helmet';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
-const list_input = [
-    'exam_id', 
-    'exam_title', 
-    'exam_major', 
-    'exam_author', 
-    'exam_date', 
-]
 
 class Exam extends Component {
     constructor(props) {
@@ -33,9 +26,8 @@ class Exam extends Component {
     handleClickAddExam = (e) =>{
         window.location.href = `/exam-details/${0}`
     }
-    
-    render() {
-        const { activeItem, value } = this.state        
+     
+    render() {      
 
         return (
             <div className="exam_div pad-top-150">
@@ -44,7 +36,7 @@ class Exam extends Component {
                 </Helmet>
                 <MenuDiv activeItem={this.state.activeItem}/>
                 <Container style={{marginBottom: 20, textAlign: 'right'}}>
-                    <Button color='yellow' onClick={this.handleClickAddExam}>Add new exam</Button>
+                    <Button color='primary' onClick={this.handleClickAddExam}>Add new exam</Button>
                 </Container>
                 <Container className="div_exam">
                     <div>

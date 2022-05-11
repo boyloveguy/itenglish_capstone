@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Loader, Container, Select, TextArea, Label, Image, Icon, Input } from 'semantic-ui-react';
+import { Button, Form, Loader, Container, Select, TextArea, Label, Icon, Input } from 'semantic-ui-react';
 import { Helmet } from 'react-helmet';
 import { useParams } from "react-router-dom";
 import FormData from 'form-data';
@@ -35,10 +35,6 @@ const ExamDetails = (props) => {
             examDesc        : '',
             user_id         : cookies.get('user_id'),
             user_role       : cookies.get('user_role'),
-            examName        : '',
-            examDesc        : '',
-            itTypeID        : '',
-            examType        : '',
             setDisableSelect: true,
             exam_id         : '',
             isEditQuestion  : ''
@@ -77,7 +73,7 @@ const ExamDetails = (props) => {
                     examTypes   : exam_types
                 }))
 
-                if(exam_id != 0){
+                if(exam_id !== 0){
                     exams       = response.data.exam;
                     answer      = response.data.answers;
                     question    = response.data.questions;
@@ -159,11 +155,11 @@ const ExamDetails = (props) => {
         const handleClickMoveToAddQuestion = (e) => {
             try {
                 //manual add
-                if(exam.typeAddQuestion == '1'){
+                if(exam.typeAddQuestion === '1'){
                     window.location.href = `/add-question/${exam.exam_id}/${exam.examType}/${1}/${0}`                    
                 }
                 //choose from question pool
-                if(exam.typeAddQuestion == '2'){
+                if(exam.typeAddQuestion === '2'){
                     window.location.href = `/add-from-question-pool/${exam.exam_id}/${exam.examType}`                   
                 }
             } catch (error) {
@@ -172,11 +168,11 @@ const ExamDetails = (props) => {
         }
 
         const handleSaveExam = () => {
-            if(exam.examName != ''
-            && exam.examDesc != ''
-            && exam.itTypeID != ''
-            && exam.examType != ''
-            && exam_id       != ''
+            if(exam.examName !== ''
+            && exam.examDesc !== ''
+            && exam.itTypeID !== ''
+            && exam.examType !== ''
+            && exam_id       !== ''
             ){
                 setExam(prev => ({
                     ...prev,
@@ -190,7 +186,7 @@ const ExamDetails = (props) => {
                 formData.append('exam_major', exam.itTypeID);
                 formData.append('exam_type', exam.examType);
                 formData.append('user_id', exam.user_id);
-                formData.append('type_save', exam_id == 0? 0 : 1);
+                formData.append('type_save', exam_id === 0? 0 : 1);
 
                 const url_save_exam = 'http://localhost/itenglish_capstone/server/public/api/save_exam';
 
@@ -456,7 +452,7 @@ const ExamDetails = (props) => {
                 <MenuDiv activeItem={'exams and tests'}/>
                 <Loader active={exam.isLoading} size='big'/>
                 <Container className='div-exam-details mar-bot-20'>
-                    <Label size='big' color='teal' tag className='mar-bot-20'>Exam Information</Label>
+                    <Label size='big' color='blue' tag className='mar-bot-20'>Exam Information</Label>
                     <Form>                        
                         <Form.Group widths={2}>
                             <Form.Field
@@ -522,33 +518,33 @@ const ExamDetails = (props) => {
                                     className='btn-add-question'
                                     label='Click to add'
                                     disabled={exam.choosen}
-                                    color='blue'
+                                    color='primary'
                                     onClick={handleClickMoveToAddQuestion}
                                 >Create...
                                 </Form.Button>
                             </Form.Group>
                         </div>
                         <div style={{ textAlign: 'center' }}>
-                            <Button onClick={handleSaveExam} type='submit' color='green' className='btn-save-exam' style={{marginRight: 10}}>Save</Button>
+                            <Button onClick={handleSaveExam} type='submit' color='primary' className='btn-save-exam' style={{marginRight: 10}}>Save</Button>
                             <Button onClick={handleDeleteExam} type='submit' color='red' className='btn-delete-exam'>Delete</Button>
                         </div>                     
                     </Form>
                 </Container>
                 <Container className='div-exam-details mar-bot-20'>
-                    <Label size='big' color='teal' tag className='mar-bot-20'>Questions List</Label>
+                    <Label size='big' color='blue' tag className='mar-bot-20'>Questions List</Label>
                     {exam.questions.map((ques, index)=>{
                         return (
                             <div style={{ marginTop: 20 }}>
                                 <Button 
                                     className='btn-edit-question' 
-                                    color='blue'
+                                    color='primary'
                                     onClick={(e)=>{
                                         //multichoice
-                                        if(exam.examType == '1'){
+                                        if(exam.examType === '1'){
                                             window.location.href = `/add-question/${exam.exam_id}/${exam.examType}/${1}/${ques.ques_id}`
                                         }
                                         //speaking
-                                        if(exam.examType == '2'){
+                                        if(exam.examType === '2'){
                                             window.location.href = `/add-speaking/${exam.exam_id}/${exam.examType}/${1}/${ques.ques_id}`
                                         }
                                     }}
@@ -567,7 +563,7 @@ const ExamDetails = (props) => {
                                     style={{ marginBottom: 10 }} 
                                     className={'ques_' + index + ' image-div'}
                                 >
-                                    {(ques.ques_image != null && ques.ques_image != '') ? 
+                                    {(ques.ques_image !== null && ques.ques_image !== '') ? 
                                     handleReferImages(ques.ques_image, 'ques_' + index) 
                                     :''}
                                 </div>                                                                

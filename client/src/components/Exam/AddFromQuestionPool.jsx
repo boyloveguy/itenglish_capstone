@@ -12,9 +12,6 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 
 const cookies = new Cookies();
-cookies.set('user_id', '3', { path: '' });
-cookies.set('user_name', 'Administrator', { path: '' });
-cookies.set('user_role', '1', { path: '' });
 
 const columns = [
     { field: 'ques_id'  , title: 'ID'       , width: 50 },
@@ -82,10 +79,10 @@ const AddFromQuestionPool = (props) => {
 
     const handleClickAddNewQuestion = () => {
         try {       
-            if(examType == 1){
+            if(examType === 1){
                 window.location.href = `/add-question/${exam_id}/${examType}/${0}/${0}`
             }
-            if(examType == 2){
+            if(examType === 2){
                 window.location.href = `/add-speaking/${exam_id}/${examType}/${0}/${0}`
             }         
             
@@ -169,7 +166,7 @@ const AddFromQuestionPool = (props) => {
 
     const handleSelectedQuestions = (data) => {
         try {
-            if(data.length == 0){
+            if(data.length === 0){
                 setQuestionPool(prev => ({
                     ...prev,
                     isDisabled: true
@@ -196,7 +193,7 @@ const AddFromQuestionPool = (props) => {
             </Helmet>
             <MenuDiv activeItem={'exams and tests'}/>
             <Container style={{marginBottom: 20, textAlign: 'right'}}>
-                <Button color='blue' onClick={handleClickAddNewQuestion}>Add new question</Button>
+                <Button color='primary' onClick={handleClickAddNewQuestion}>Add new question</Button>
             </Container>
             <Container className="div_exam" style={{minHeight: 500, maxHeight: 1000}}>
                 <div className="exam_table">
@@ -229,7 +226,7 @@ const AddFromQuestionPool = (props) => {
                 </div>
                 <div style={{marginTop: 20, textAlign: 'right'}}>
                     <Button 
-                        color='blue' 
+                        color='primary' 
                         onClick={handleClickAddQuestion}
                         disabled={question_pool.isDisabled}
                     >Add selected question to Exam ({exam_id})

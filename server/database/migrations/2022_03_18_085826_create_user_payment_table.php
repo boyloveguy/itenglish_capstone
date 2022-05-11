@@ -22,10 +22,10 @@ return new class extends Migration
             $table->integer('cre_user')->unsigned();
             $table->dateTimeTz('upd_date', $precision = 0);
             $table->integer('upd_user')->unsigned();
-            $table->foreign('user_id')->references('user_id')->on('user')->onUpdate('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
             $table->foreign('payment_id')->references('payment_id')->on('payment')->onUpdate('cascade');
-            $table->foreign('cre_user')->references('user_id')->on('user')->onUpdate('cascade');
-            $table->foreign('upd_user')->references('user_id')->on('user')->onUpdate('cascade');
+            $table->foreign('cre_user')->references('id')->on('users')->onUpdate('cascade');
+            $table->foreign('upd_user')->references('id')->on('users')->onUpdate('cascade');
         });
     }
 

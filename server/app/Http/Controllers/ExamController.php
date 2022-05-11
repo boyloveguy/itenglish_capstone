@@ -20,13 +20,13 @@ class ExamController extends Controller
             $exams = DB::table('exam')
             ->join('it_type','it_type.it_type_id','=','exam.it_type_id')
             ->join('exam_type','exam_type.type_id','=','exam.type_id') 
-            ->join('user','user.user_id','=','exam.cre_user')           
+            ->join('users','users.id','=','exam.cre_user')           
             ->select('exam.exam_id'
             , 'exam.exam_name'
             , 'it_type.type_name as major_name'
             , 'exam_type.type_name as type_exam'
             , 'exam_type.type_name as submit_times'
-            , 'user.user_name'
+            , 'users.user_name'
             , 'exam.cre_date'
             )->get();            
             return response()->json(array('exam' => $exams), 200);
@@ -133,7 +133,7 @@ class ExamController extends Controller
             }
             return response()->json(array('success' => true, 'message' => 'Save successfull!', 'exam_id' =>$exam_id), 200);
         } catch (\Exception $e) {
-            return response()->json(array('success' => false, 'message' => 'An error occurred', 'error' => $e), 200);
+            return response()->json(array('success' => false, 'message' => 'An error occurred', 'error' => $e->getMessage()), 200);
         }
     }
 
@@ -332,12 +332,12 @@ class ExamController extends Controller
             
             //get question added to 'question' table but not add to exam
             $ques_added = DB::table('question_pool')
-            ->join('user','user.user_id','=','question_pool.cre_user')
+            ->join('users','users.id','=','question_pool.cre_user')
             ->join('question', 'question_pool.ques_id', '=', 'question.ques_id')
             ->select('question_pool.ques_id'
             , 'question_pool.ques_text'
             , 'question_pool.cre_date'
-            , 'user.user_name')
+            , 'users.user_name')
             ->where('question_pool.cre_user', '=', $res->input('user_id'))
             ->where('question_pool.ques_type', '=', $res->input('ques_type'))
             ->whereNotIn('question.ques_id', 
@@ -376,12 +376,12 @@ class ExamController extends Controller
             }
 
             $ques_not_add_yet = DB::table('question_pool')
-            ->join('user','user.user_id','=','question_pool.cre_user')
+            ->join('users','users.id','=','question_pool.cre_user')
             ->leftJoin('question', 'question_pool.ques_id', '=', 'question.ques_id')
             ->select('question_pool.ques_id'
             , 'question_pool.ques_text'
             , 'question_pool.cre_date'
-            , 'user.user_name'
+            , 'users.user_name'
             )
             ->where('question_pool.cre_user', '=', $res->input('user_id'))
             ->where('question_pool.ques_type', '=', $res->input('ques_type'))
@@ -389,12 +389,12 @@ class ExamController extends Controller
             
             //get question added to 'question' table but not add to exam
             $ques_added = DB::table('question_pool')
-            ->join('user','user.user_id','=','question_pool.cre_user')
+            ->join('users','users.id','=','question_pool.cre_user')
             ->join('question', 'question_pool.ques_id', '=', 'question.ques_id')
             ->select('question_pool.ques_id'
             , 'question_pool.ques_text'
             , 'question_pool.cre_date'
-            , 'user.user_name')
+            , 'users.user_name')
             ->where('question_pool.cre_user', '=', $res->input('user_id'))
             ->where('question_pool.ques_type', '=', $res->input('ques_type'))
             ->whereNotIn('question.ques_id', 
@@ -421,13 +421,13 @@ class ExamController extends Controller
     function refer_exam_explain(Request $res){
         try {
             $exam_info = DB::table('exam')
-            ->join('user','user.user_id','=','exam.cre_user')
+            ->join('users','users.id','=','exam.cre_user')
             ->join('it_type','it_type.it_type_id','=','exam.it_type_id')
             ->join('exam_type','exam_type.type_id','=','exam.type_id')
             ->select('exam.exam_name'
             , 'exam.exam_desc'
             , 'exam.cre_date'
-            , 'user.user_name'
+            , 'users.user_name'
             , 'exam.type_id'
             , 'it_type.type_name as major'
             , 'exam_type.type_name'

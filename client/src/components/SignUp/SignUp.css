@@ -26,10 +26,6 @@ body, html {
     right: 0;
     padding: 30px;
 }
-.btn-register{
-    background-color: #4d197c!important;
-    color: white!important;
-}
 .b_day, .b_day>i{
     height: unset!important;
 }

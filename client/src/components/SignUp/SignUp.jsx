@@ -79,7 +79,7 @@ class SignUp extends Component {
     };
 
     handleButtonModal(){
-        if(this.state.modal_btn == "Cancel"){
+        if(this.state.modal_btn === "Cancel"){
             this.setState({
                 showMsg: false
             });  
@@ -265,7 +265,7 @@ class SignUp extends Component {
                             />
                             <div>
                                 {/* <Form.Checkbox label='I agree to the Terms and Conditions' required/> */}
-                                <Button onClick={this.handleSignUp} type='submit' className='btn-register'>Sign Up</Button>
+                                <Button onClick={this.handleSignUp} type='submit' className='btn-register' color='primary'>Sign Up</Button>
                             </div>
                         </Form>
                     </div>

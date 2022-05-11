@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('user_id')->unsigned();
             $table->integer('status_id')->unsigned();
             $table->dateTimeTz('date_upd_status', $precision = 0)->nullable();
-            $table->foreign('user_id')->references('user_id')->on('user')->onUpdate('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
             $table->foreign('status_id')->references('status_id')->on('status')->onUpdate('cascade');
         });
     }

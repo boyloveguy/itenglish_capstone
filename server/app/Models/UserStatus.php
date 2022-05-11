@@ -11,4 +11,5 @@ class UserStatus extends Model
     protected $fillable =   ['user_id', 
                             'status_id',
                             'date_upd_status'];
+    public $timestamps  = false;
 }

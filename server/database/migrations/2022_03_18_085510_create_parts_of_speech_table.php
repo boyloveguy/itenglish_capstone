@@ -13,11 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ranking', function (Blueprint $table) {
-            $table->integer('user_id')->unsigned();
-            $table->primary(['user_id']);
-            $table->decimal('total_score', $precision = 8, $scale = 2);
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
+        Schema::create('parts_of_speech', function (Blueprint $table) {
+            $table->increments('pos_id');
+            $table->string('pos_name', 100)->unique();
+            $table->string('pos_desc', 1000)->nullable();
         });
     }
 
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ranking');
+        Schema::dropIfExists('parts_of_speech');
     }
 };

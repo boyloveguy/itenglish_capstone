@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Loader, Container, TextArea, Label, Radio, Image, Input } from 'semantic-ui-react';
+import { Button, Form, Loader, Container, TextArea, Label, Image, Input } from 'semantic-ui-react';
 import { Helmet } from 'react-helmet';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { useParams } from "react-router-dom";
@@ -10,9 +10,7 @@ import './Exam.css';
 import Cookies from 'universal-cookie';
 import Swal from 'sweetalert2';
 
-const cookies       = new Cookies();
-const answer_arr    = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-const max_answer    = 4;
+const cookies = new Cookies();
 
 const AddSpeaking = (props) => {
     const { exam_id, exam_type, add_type, ques_id } = useParams();
@@ -45,7 +43,7 @@ const AddSpeaking = (props) => {
         user_role       : cookies.get('user_role')
     })
 
-    if(ques_id != 0){
+    if(ques_id !== 0){
         const url = "http://localhost/itenglish_capstone/server/public/api/refer_question";
 
         useEffect(async () => {            
@@ -76,7 +74,7 @@ const AddSpeaking = (props) => {
                     isLoading: false
                 }))                
 
-                if(quesImage.length > 0 && quesImage.length != ['']){
+                if(quesImage.length > 0 && quesImage.length !== ['']){
                     for(let i = 0; i < quesImage.length; i++){
                         quesImage[i] = '/images/exam/' + quesImage[i];
                     }
@@ -127,8 +125,8 @@ const AddSpeaking = (props) => {
 
     const handleSaveQuestion = (e) => {
         try {
-            if (    question.quesPoint  != '' 
-                &&  question.quesText   != ''
+            if (    question.quesPoint  !== '' 
+                &&  question.quesText   !== ''
             ){
                 setQuestion(prev => ({
                     ...prev,
@@ -180,12 +178,12 @@ const AddSpeaking = (props) => {
                             title               : response.data.message,
                             icon                : 'success',
                             confirmButtonColor  : '#3085d6',
-                            confirmButtonText   : add_type != '0' ? 'Go to Exam Detail Page': 'Go to Question Pool Page',
+                            confirmButtonText   : add_type !== '0' ? 'Go to Exam Detail Page': 'Go to Question Pool Page',
                             showDenyButton      : true,
                             denyButtonText      : `Continue add new question`,
                         }).then((results) => {
                             if (results.isConfirmed) {
-                                if(add_type == '0'){
+                                if(add_type === '0'){
                                     window.location.href = `/add-from-question-pool/${exam_id}/${exam_type}`;
                                 }else{
                                     window.location.href = `/exam-details/${exam_id}`;
@@ -227,7 +225,7 @@ const AddSpeaking = (props) => {
             <Loader active={question.isLoading} size='big'/>
             <Container className='div-exam-speaking mar-bot-20'>
                 <div className='mar-bot-20'>
-                    {add_type == '0'? '' : <Label size='big' color='teal' tag>Exam ID: {exam_id}</Label>}                    
+                    {add_type === '0'? '' : <Label size='big' color='blue' tag>Exam ID: {exam_id}</Label>}                    
                     <Label size='big' color='blue' tag>Add Speaking</Label>                   
                 </div>
                 <Form>
@@ -274,7 +272,7 @@ const AddSpeaking = (props) => {
                         </div>                        
                     </div>
                     <div style={{ textAlign: 'center' }}>
-                        <Button type='submit' className='btn-register' onClick={handleSaveQuestion}>Save Question</Button>
+                        <Button color='primary' type='submit' className='btn-register' onClick={handleSaveQuestion}>Save Question</Button>
                     </div>
                 </Form>
             </Container>

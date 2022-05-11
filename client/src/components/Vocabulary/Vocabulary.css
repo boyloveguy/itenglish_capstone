@@ -1,0 +1,16 @@
+.div-voca{
+    border: solid 1px #d4d4d5;
+    border-radius: 7px;
+    padding: 30px!important;
+    background-color: white;
+    min-height: 500px;
+}
+.MuiAutocomplete-endAdornment.css-1q60rmi-MuiAutocomplete-endAdornment{
+    display: none!important;
+}
+.pos-voca{
+    margin: 0 0 1em;
+}
+.select__control.css-1s2u09g-control{
+    border-color: rgba(34,36,38,.15)!important;
+}
