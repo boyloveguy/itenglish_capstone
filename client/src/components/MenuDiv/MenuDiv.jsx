@@ -3,6 +3,7 @@ import { Menu, Dropdown, Image, Input } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import './MenuDiv.css';
 import Cookies from 'universal-cookie';
+import MenuAuth from './MenuAuth';
 
 const cookies = new Cookies();
 
@@ -22,7 +23,6 @@ class MenuDiv extends Component {
     handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
     render() {
-        const { activeItem } = this.state.activeItem
         return (
             <div>
                 <Menu pointing secondary inverted className='menu-div' fixed='top'>
@@ -65,6 +65,8 @@ class MenuDiv extends Component {
                         name='rank'
                         active={this.props.activeItem === 'rank'}
                         onClick={this.handleItemClick}
+                        as={Link}
+                        to='/rank-board'
                         className='pad-bot-26'
                     />
                     <Menu.Menu position='right' className='pad-bot-10'>
@@ -74,16 +76,7 @@ class MenuDiv extends Component {
                         <Menu.Item>
                             <i class="user circle icon"></i>                        
                         </Menu.Item>
-                        <Dropdown item text={this.state.user_name} className='user-name-menu'>
-                            <Dropdown.Menu>
-                                <Dropdown.Item>
-                                    <i class="user icon"></i>My Profile
-                                </Dropdown.Item>
-                                <Dropdown.Item>
-                                    <i class="arrow left icon"></i>Sign Out
-                                </Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
+                        <MenuAuth />
                     </Menu.Menu>
                 </Menu>
             </div>

@@ -5,7 +5,7 @@ import { Helmet } from "react-helmet";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { withRouter } from "react-router-dom";
-import Validator from "../../utils/validator";
+import SimpleReactValidator from "simple-react-validator";
 
 class Login extends Component {
   constructor(props) {
@@ -14,39 +14,9 @@ class Login extends Component {
     this.state = {
       email: "",
       password: "",
-      errors: {},
     };
 
-    const requiredWith = (value, field, state) =>
-      (!state[field] && !value) || !!value;
-    const rules = [
-      {
-        field: "email",
-        method: "isEmpty",
-        validWhen: false,
-        message: "The email field is required.",
-      },
-      {
-        field: "email",
-        method: "isEmail",
-        validWhen: true,
-        message: "The email must be a valid email address.",
-      },
-      {
-        field: "password",
-        method: "isEmpty",
-        validWhen: false,
-        message: "The password field is required.",
-      },
-      {
-        field: "message",
-        method: requiredWith,
-        args: ["subject"],
-        validWhen: true,
-        message: "The message field is required when subject is present.",
-      },
-    ];
-    this.validator = new Validator(rules);
+    this.validator = new SimpleReactValidator();
   }
 
   init = () => {
@@ -61,35 +31,45 @@ class Login extends Component {
   };
 
   handleSubmit = () => {
-    this.setState({
-      errors: this.validator.validate(this.state),
-    });
-    const { email, password } = this.state;
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
+    if (this.validator.allValid()) {
+      const { email, password } = this.state;
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("password", password);
 
-    axios({
-      method: "post",
-      url: "http://localhost:8000/api/login",
-      data: formData,
-    }).then((res) => {
-      const nameUser = res.data.user.name;
-      Swal.fire(
-        "Hello " + nameUser,
-        "You have been logged-in successfully",
-        "success"
-      ).then(() => {
-        localStorage.setItem("userToken", res.data.token);
-        localStorage.setItem("userName", res.data.user.name);
-        localStorage.setItem("userId", res.data.user.id);
-        this.props.history.push("/");
-      });
-    });
+      axios({
+        method: "post",
+        url: "http://localhost:8000/api/login",
+        data: formData,
+      })
+        .then((res) => {
+          const nameUser = res.data.user.user_name;
+          Swal.fire(
+            "Hello " + nameUser,
+            "You have been logged-in successfully",
+            "success"
+          ).then(() => {
+            localStorage.setItem("userToken", res.data.token);
+            localStorage.setItem("userName", nameUser);
+            localStorage.setItem("userId", res.data.user.id);
+            this.props.history.push("/");
+          });
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: err.response.data.message,
+          });
+        });
+    } else {
+      this.validator.showMessages();
+      this.forceUpdate();
+    }
   };
 
   render() {
-    const { errors } = this.state;
+    const {email, password} = this.state;
     return (
       <React.Fragment>
         <div className="div-login">
@@ -107,12 +87,14 @@ class Login extends Component {
                   placeholder="Email"
                   name="email"
                   onChange={this.handleChange}
+                  value={this.state.email}
                 />
 
-                {errors.email && (
-                  <div className="validation" style={{ display: "block" }}>
-                    {errors.email}
-                  </div>
+                {this.validator.message(
+                  "email",
+                  email,
+                  "required|email",
+                  { className: "text-danger validation" }
                 )}
               </Form.Field>
 
@@ -124,11 +106,13 @@ class Login extends Component {
                   placeholder="Password"
                   name="password"
                   onChange={this.handleChange}
+                  value={this.state.password}
                 />
-                {errors.password && (
-                  <div className="validation" style={{ display: "block" }}>
-                    {errors.password}
-                  </div>
+                {this.validator.message(
+                  "password",
+                  password,
+                  "required",
+                  { className: "text-danger validation" }
                 )}
               </Form.Field>
 

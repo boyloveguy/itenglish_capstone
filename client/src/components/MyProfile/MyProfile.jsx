@@ -5,77 +5,52 @@ import MenuDiv from "../MenuDiv/MenuDiv";
 import { Helmet } from "react-helmet";
 import axios from "axios";
 import Swal from "sweetalert2";
-import Validator from "../../utils/validator";
+import { Loader } from "semantic-ui-react";
+import SimpleReactValidator from "simple-react-validator";
 
 class MyProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      avatar: null,
-      first_name: "",
-      last_name: "",
-      birthday: "",
+      user_avatar: null,
+      user_fname: "",
+      user_lname: "",
+      user_birthday: "",
       email: "",
       role: 0,
-      password: "",
-      name: "",
       password_confirmation: "",
-      avatar: null,
+      user_avatar: null,
       imagePreviewUrl: "",
-      errors: {},
+      total_exam: "",
+      ranking: "",
+      isLoading: true,
+      name: "",
     };
 
-    const requiredWith = (value, field, state) =>
-      (!state[field] && !value) || !!value;
-    const rules = [
-      {
-        field: "first_name",
-        method: "isEmpty",
-        validWhen: false,
-        message: "The first name field is required.",
-      },
-      {
-        field: "last_name",
-        method: "isEmpty",
-        validWhen: false,
-        message: "The last name field is required.",
-      },
-      {
-        field: "birthday",
-        method: "isEmpty",
-        validWhen: false,
-        message: "The birthday field is required.",
-      },
-      {
-        field: "message",
-        method: requiredWith,
-        args: ["subject"],
-        validWhen: true,
-        message: "The message field is required when subject is present.",
-      },
-    ];
-    this.validator = new Validator(rules);
+    this.validator = new SimpleReactValidator();
   }
-  state = { activeItem: "home" };
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
   componentDidMount() {
     axios
-      .get("http://localhost:8000/api/user/" + localStorage.getItem("userId"))
+      .get("http://localhost:8000/api/user")
       .then((res) => {
         this.setState({
-          first_name: res.data.user.first_name,
-          last_name: res.data.user.last_name,
-          name: res.data.user.name,
-          birthday: res.data.user.birthday,
+          user_fname: res.data.user.user_fname,
+          user_lname: res.data.user.user_lname,
+          user_birthday: res.data.user.user_birthday,
           email: res.data.user.email,
           role: res.data.user.role_id,
-          password: res.data.user.password,
-          password_confirmation: res.data.user.password,
-          avatar: res.data.user.avatar,
+          user_avatar: res.data.user.user_avatar,
+          total_exam: res.data.total_exam,
+          ranking: res.data.ranking,
+          isLoading: false,
+          name: res.data.user.user_fname + " " + res.data.user.user_lname,
         });
       })
       .catch((error) => {
+        this.state({
+          isLoading: false,
+        });
         console.log(error);
       });
   }
@@ -88,70 +63,62 @@ class MyProfile extends Component {
 
   handleChangeFile = (event) => {
     let reader = new FileReader();
-    let avatar = event.target.files[0];
+    let user_avatar = event.target.files[0];
 
     reader.onloadend = () => {
       this.setState({
-        avatar: avatar,
+        user_avatar: user_avatar,
         imagePreviewUrl: reader.result,
       });
     };
 
-    reader.readAsDataURL(avatar);
+    reader.readAsDataURL(user_avatar);
   };
 
   handleSubmit = (e) => {
     e.preventDefault();
-    debugger
-    this.setState({
-      errors: this.validator.validate(this.state),
-    });
-    const {
-      first_name,
-      last_name,
-      password,
-      birthday,
-      password_confirmation,
-      avatar,
-    } = this.state;
+    if (this.validator.allValid()) {
+      const { user_fname, user_lname, user_birthday, user_avatar } = this.state;
 
-    const formData = new FormData();
-    formData.append("_method", "PUT");
-    formData.append("first_name", first_name);
-    formData.append("last_name", last_name);
-    formData.append("name", first_name + " " + last_name);
-    formData.append("birthday", birthday);
-    formData.append("password", password);
-    formData.append("password_confirmation", password_confirmation);
-    formData.append("avatar", avatar);
+      const formData = new FormData();
+      formData.append("_method", "PUT");
+      formData.append("user_fname", user_fname);
+      formData.append("user_lname", user_lname);
+      formData.append("user_birthday", user_birthday);
+      formData.append("user_avatar", user_avatar);
 
-    axios({
-      method: "post",
-      url: "http://localhost:8000/api/user/" + localStorage.getItem("userId"),
-      data: formData,
-    })
-      .then((res) => {
-        localStorage.setItem("userName", first_name + " " + last_name);
-        Swal.fire(
-          "Success",
-          "You have been update successfully",
-          "success"
-        ).then(function() {
-          window.location.reload();
-        });
+      axios({
+        method: "post",
+        url: "http://localhost:8000/api/user/" + localStorage.getItem("userId"),
+        data: formData,
       })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => {
+          const name = res.data.user.user_fname + " " + res.data.user.user_lname;
+          this.setState({
+            name: name,
+          });
+          Swal.fire("Success", "You have been update successfully", "success");
+        })
+        .catch(() => {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Something wrong",
+          });
+        });
+    } else {
+      this.validator.showMessages();
+      this.forceUpdate();
+    }
   };
 
   previewImage = () => {
-    const { avatar, imagePreviewUrl } = this.state;
+    const { user_avatar, imagePreviewUrl } = this.state;
     if (imagePreviewUrl !== "") {
       return <img src={imagePreviewUrl} />;
     } else {
-      if (avatar !== "") {
-        return <img src={"http://localhost:8000/img/" + avatar} />;
+      if (user_avatar !== "") {
+        return <img src={"http://localhost:8000/img/" + user_avatar} />;
       } else {
         return (
           <div className="previewText">Please select an Image for Preview</div>
@@ -162,14 +129,14 @@ class MyProfile extends Component {
 
   render() {
     const {
-      first_name,
-      last_name,
-      birthday,
+      user_fname,
+      user_lname,
+      user_birthday,
       email,
-      password,
+      total_exam,
+      ranking,
+      isLoading,
       name,
-      password_confirmation,
-      errors,
     } = this.state;
     return (
       <div className="div-my-profile">
@@ -177,17 +144,18 @@ class MyProfile extends Component {
           <title>ITEnglish | Home</title>
         </Helmet>
         <MenuDiv />
+        <Loader active={isLoading} size="big" />
         <Form className="form-my-profile" onSubmit={this.handleSubmit}>
           <Row>
             <Col sm={4} className="div-left-4">
               <Row className="justify-content-sm-center">
-                <h4>{name}</h4>
+                <h3>{name}</h3>
                 <div className="div-img">{this.previewImage()}</div>
                 <div className="div-input">
                   <Form.Group>
                     <Form.Control
                       type="file"
-                      name="avatar"
+                      name="user_avatar"
                       onChange={this.handleChangeFile}
                     ></Form.Control>
                   </Form.Group>
@@ -196,72 +164,76 @@ class MyProfile extends Component {
 
               <Card className="text-center">
                 <ListGroup variant="flush">
-                  <ListGroup.Item>Raking</ListGroup.Item>
-                  <ListGroup.Item>Total exams</ListGroup.Item>
-                  <ListGroup.Item>Class enttended</ListGroup.Item>
+                  <ListGroup.Item className="group-data">
+                    <p className="text-data">Ranking</p>
+                    <p className="data">{ranking}</p>
+                  </ListGroup.Item>
+                  <ListGroup.Item className="group-data">
+                    <p className="text-data">Total exams</p>
+                    <p className="data">{total_exam}</p>
+                  </ListGroup.Item>
+                  <ListGroup.Item className="group-data">
+                    {" "}
+                    <p className="text-data">Class entended</p>
+                    <span className="data">1</span>
+                  </ListGroup.Item>
                 </ListGroup>
               </Card>
             </Col>
             <Col sm={8} className="div-right-8">
               <Row>
-                <Form.Group as={Col} controlId="first_name">
+                <Form.Group as={Col} controlId="user_fname">
                   <Form.Label>First Name</Form.Label>
                   <Form.Control
                     type="text"
-                    value={first_name}
-                    name="first_name"
+                    value={user_fname}
+                    name="user_fname"
                     onChange={this.handleChange}
                   />
-                  {errors.first_name && (
-                    <div
-                      className="profile-validation"
-                      style={{ display: "block" }}
-                    >
-                      {errors.first_name}
-                    </div>
+                  {this.validator.message(
+                    "user_fname",
+                    user_fname,
+                    "required",
+                    { className: "text-danger profile-validation" }
                   )}
                 </Form.Group>
 
-                <Form.Group as={Col} controlId="last_name">
+                <Form.Group as={Col} controlId="user_lname">
                   <Form.Label>Last Name</Form.Label>
                   <Form.Control
                     type="text"
-                    value={last_name}
-                    name="last_name"
+                    value={user_lname}
+                    name="user_lname"
                     onChange={this.handleChange}
                   />
-                  {errors.last_name && (
-                    <div
-                      className="profile-validation"
-                      style={{ display: "block" }}
-                    >
-                      {errors.last_name}
-                    </div>
+                  {this.validator.message(
+                    "user_lname",
+                    user_lname,
+                    "required",
+                    { className: "text-danger profile-validation" }
                   )}
                 </Form.Group>
               </Row>
               <Row>
-                <Form.Group as={Col} controlId="birthday">
+                <Form.Group as={Col} controlId="user_birthday">
                   <Form.Label>Birthday</Form.Label>
                   <Form.Control
                     type="date"
-                    value={birthday}
-                    name="birthday"
+                    value={user_birthday}
+                    name="user_birthday"
                     onChange={this.handleChange}
                   />
-                  {errors.birthday && (
-                    <div
-                      className="profile-validation"
-                      style={{ display: "block" }}
-                    >
-                      {errors.birthday}
-                    </div>
+                  {this.validator.message(
+                    "user_birthday",
+                    user_birthday,
+                    "required",
+                    { className: "text-danger profile-validation" }
                   )}
                 </Form.Group>
 
                 <Form.Group as={Col} controlId="email">
                   <Form.Label>Email</Form.Label>
-                  <Form.Control type="email" value={email} />
+                  <Form.Control type="email" value={email} disabled />
                 </Form.Group>
               </Row>
               <Row>
@@ -274,28 +246,6 @@ class MyProfile extends Component {
                     <option>Admin</option>
                     <option>Customer</option>
                   </Form.Select>
-                </Form.Group>
-              </Row>
-              <Row>
-                <Form.Group as={Col} controlId="password">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    value={password}
-                    name="password"
-                    onChange={this.handleChange}
-                  />
-                </Form.Group>
-              </Row>
-              <Row>
-                <Form.Group as={Col} controlId="password_confirmation">
-                  <Form.Label>Confirm Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    value={password_confirmation}
-                    name="password_confirmation"
-                    onChange={this.handleChange}
-                  />
                 </Form.Group>
               </Row>
               <Row className="justify-content-sm-center">

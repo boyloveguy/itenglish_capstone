@@ -34,7 +34,7 @@ const AddFromQuestionPool = (props) => {
         selectedQuestion: []
     }); 
 
-    const url = "http://localhost/itenglish_capstone/server/public/api/get_question_pool";
+    const url = "http://localhost:8000/api/get_question_pool";
     useEffect(() => {        
         fetch(url, {
             method: 'POST',
@@ -101,7 +101,7 @@ const AddFromQuestionPool = (props) => {
             formData.append('user_id', cookies.get('user_id'));
             formData.append('ques_type', examType);
             formData.append('selected_questions', JSON.stringify(question_pool.selectedQuestion));
-            const url = 'http://localhost/itenglish_capstone/server/public/api/add_from_question_pool';
+            const url = 'http://localhost:8000/api/add_from_question_pool';
                 axios({
                     method  : 'POST',
                     url     : url,

@@ -3,50 +3,22 @@ import { Button, Form, Input, Image } from "semantic-ui-react";
 import { Helmet } from "react-helmet";
 import axios from "axios";
 import Swal from "sweetalert2";
-import Validator from "../../utils/validator";
+import { withRouter } from "react-router-dom";
+import SimpleReactValidator from "simple-react-validator";
+import "./ChangePassword.css";
 
 class ChangePassword extends Component {
   constructor(props) {
     super(props);
     this.init();
     this.state = {
-      current_password: "",
+      password: "",
       new_password: "",
       new_confirm_password: "",
       password: "",
-      errors: {},
     };
 
-    const requiredWith = (value, field, state) =>
-      (!state[field] && !value) || !!value;
-    const rules = [
-      {
-        field: "current_password",
-        method: "isEmpty",
-        validWhen: false,
-        message: "The current password field is required.",
-      },
-      {
-        field: "new_password",
-        method: "isEmpty",
-        validWhen: false,
-        message: "The new password field is required.",
-      },
-      {
-        field: "new_confirm_password",
-        method: "isEmpty",
-        validWhen: false,
-        message: "The new confirm password field is required.",
-      },
-      {
-        field: "message",
-        method: requiredWith,
-        args: ["subject"],
-        validWhen: true,
-        message: "The message field is required when subject is present.",
-      },
-    ];
-    this.validator = new Validator(rules);
+    this.validator = new SimpleReactValidator();
   }
 
   init = () => {
@@ -61,34 +33,43 @@ class ChangePassword extends Component {
   };
 
   handleSubmit = () => {
-    this.setState({
-      errors: this.validator.validate(this.state),
-    });
+    if (this.validator.allValid()) {
+      const { password, new_password, new_confirm_password } =
+        this.state;
+      const formData = new FormData();
+      formData.append("password", password);
+      formData.append("new_password", new_password);
+      formData.append("new_confirm_password", new_confirm_password);
 
-    const { current_password, new_password, new_confirm_password } = this.state;
-    const formData = new FormData();
-    formData.append("current_password", current_password);
-    formData.append("new_password", new_password);
-    formData.append("new_confirm_password", new_confirm_password);
-
-    axios({
-      method: "post",
-      url: "http://localhost:8000/api/change-password",
-      data: formData,
-    }).then((res) => {
-      Swal.fire("Success", "Password change successfully.", "success");
-    });
+      axios({
+        method: "post",
+        url: "http://localhost:8000/api/change-password",
+        data: formData,
+      }).then(() => {
+        Swal.fire("Success", "Password change successfully.", "success");
+        this.props.history.push("/");
+      }).catch(() =>{
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Some thing wrong",
+        });
+      })
+    } else {
+      this.validator.showMessages();
+      this.forceUpdate();
+    }
   };
 
   render() {
-    const { errors } = this.state;
+    const { password, new_password, new_confirm_password } = this.state;
     return (
       <React.Fragment>
         <div className="div-login">
           <Helmet>
             <title>Update Password</title>
           </Helmet>
-          <div className="login-container">
+          <div className="change-password-container">
             <div className="div-logo">
               <Image src="/images/logo.png" size="medium" />
             </div>
@@ -96,15 +77,17 @@ class ChangePassword extends Component {
               <Form.Field className="div-field">
                 <label>Current Password</label>
                 <Input
-                type="password"
-                  name="current_password"
+                  type="password"
+                  name="password"
                   onChange={this.handleChange}
+                  value={password}
                 />
 
-                {errors.current_password && (
-                  <div className="validation" style={{ display: "block" }}>
-                    {errors.current_password}
-                  </div>
+                {this.validator.message(
+                  "password",
+                  password,
+                  "required",
+                  { className: "text-danger validation" }
                 )}
               </Form.Field>
 
@@ -115,11 +98,13 @@ class ChangePassword extends Component {
                   type="password"
                   name="new_password"
                   onChange={this.handleChange}
+                  value={new_password}
                 />
-                {errors.new_password && (
-                  <div className="validation" style={{ display: "block" }}>
-                    {errors.new_password}
-                  </div>
+                {this.validator.message(
+                  "new_password",
+                  new_password,
+                  "required",
+                  { className: "text-danger validation" }
                 )}
               </Form.Field>
 
@@ -130,11 +115,13 @@ class ChangePassword extends Component {
                   type="password"
                   name="new_confirm_password"
                   onChange={this.handleChange}
+                  value={new_confirm_password}
                 />
-                {errors.new_confirm_password && (
-                  <div className="validation" style={{ display: "block" }}>
-                    {errors.new_confirm_password}
-                  </div>
+                {this.validator.message(
+                  "new_confirm_password",
+                  new_confirm_password,
+                  "required",
+                  { className: "text-danger validation" }
                 )}
               </Form.Field>
 
@@ -149,4 +136,4 @@ class ChangePassword extends Component {
   }
 }
 
-export default ChangePassword;
+export default withRouter(ChangePassword);

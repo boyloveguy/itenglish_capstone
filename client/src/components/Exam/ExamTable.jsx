@@ -23,7 +23,7 @@ const ExamTable = (props) =>{
     const [isLoading, setLoading]   = useState(true);
     const [tableData, setTableData] = useState([]);
     const user_role                 = cookies.get('user_role')
-    const url = "http://localhost/itenglish_capstone/server/public/api/exam";
+    const url = "http://localhost:8000/api/exam";
     useEffect(() => {
         fetch(url)
         .then((data) => data.json())

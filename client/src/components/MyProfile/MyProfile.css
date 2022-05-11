@@ -15,8 +15,8 @@
   padding: 30px;
   top: 15%;
 }
-.div-right-8{
-    position: relative;
+.div-right-8 {
+  position: relative;
 }
 .div-right-8 .row {
   margin: 35px 10px;
@@ -40,7 +40,7 @@
   text-align: center;
 }
 
-.div-left-4 h4 {
+.div-left-4 h3 {
   text-align: center;
 }
 .div-left-4 .div-input {
@@ -60,11 +60,33 @@
   color: white !important;
   border: #fbbd08 !important;
 }
-.profile-validation{
-  display: none;
+.profile-validation {
   position: absolute;
   margin: 5px 0;
   font-weight: 500;
   font-size: 13px;
   color: red;
+}
+
+.group-data {
+  display: flex !important;
+  justify-content: space-between;
+}
+
+.group-data .data {
+  display: inline-block;
+  /* word-wrap: break-word; */
+  background-color: #0979d3;
+  color: white;
+  border: 1px solid #0979d3;
+  min-width: 30px;
+  height: 30px;
+  border-radius: 40%;
+  font-weight: 700;
+  padding: 4px 10px;
+}
+
+.group-data .text-data {
+  margin: 0;
+  padding-top: 4px;
 }

@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Ranking extends Model
 {
     protected $table    = 'ranking';
-    protected $fillable =   ['user_id', 
-                            'total_score'];
+    protected $fillable =   [
+        'user_id',
+        'total_score'
+    ];
+
+    public $timestamps  = false;
 }

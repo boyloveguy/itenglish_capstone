@@ -6,31 +6,32 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+
     public function store(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
-        //User check
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            $user = Auth::user();
-            $token = $request->user()->createToken($user->email);
 
+        if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
-                'token' => $token,
-                'user' => $user
-            ]);
+                'message' => 'Invalid login details'
+            ], 401);
         }
+
+        $user = auth()->user();
+        //create token
+        $token = $user->createToken('auth_token')->plainTextToken;
+
         return response()->json([
-            'errors' => [
-                'email' => 'The provided credentials do not match our records.',
-            ]
-        ], 422);
+            'token' => $token,
+            'user' => $user
+        ]);
     }
 
 
@@ -40,15 +41,13 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function signOut(Request $request)
+    public function logout()
     {
-        $request->session()->invalidate();
+        auth()->user()->tokens()->delete();
 
-        $request->session()->regenerateToken();
-        return response()->json([
-            'status' => 200,
-            'message' => "Logged Out Successfully"
-        ]);
+        return [
+            'message' => 'Tokens Revoked'
+        ];
     }
 
     public function show($id)
@@ -57,6 +56,24 @@ class AuthController extends Controller
         return response()->json([
             'status' => 200,
             'user' => $user
+        ]);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|password',
+            'new_password' => 'required',
+            'new_confirm_password' => 'same:new_password',
+        ]);
+        $user = auth()->user();
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Change password successfully.'
         ]);
     }
 }

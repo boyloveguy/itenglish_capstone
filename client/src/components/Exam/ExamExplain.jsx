@@ -21,7 +21,7 @@ const ExamExplain = (props) => {
         isLoading   : true
     })
 
-    const url = "http://localhost/itenglish_capstone/server/public/api/refer_exam_explain";
+    const url = "http://localhost:8000/api/refer_exam_explain";
 
     useEffect(async () => {
         try {

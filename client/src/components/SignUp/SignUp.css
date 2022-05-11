@@ -1,56 +1,79 @@
-body, html {
-    height: 100%;
-    margin: 0;
+body,
+html {
+  height: 100%;
+  margin: 0;
 }
-#root, #root>div{
-    height: 100%;
+#root,
+#root > div {
+  height: 100%;
 }
-.div-sign-up{
-    background-image: url("/images/sign-up-background.jpg")!important;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 100%;
+.div-sign-up {
+  background-color: #fbbd08;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
 }
-.sign-up-container{
-    background: white;
-    border: 0px;
-    border-radius: 7px;
-    width: 60%;
-    height: fit-content;
-    position: absolute;
-    margin: auto;
-    top: 100px;
-    bottom: 100px;
-    left: 0;
-    right: 0;
-    padding: 30px;
+.sign-up-container {
+  background: white;
+  border: 0px;
+  border-radius: 7px;
+  width: 60%;
+  height: fit-content;
+  position: absolute;
+  margin: auto;
+  top: 100px;
+  bottom: 100px;
+  left: 0;
+  right: 0;
+  padding: 30px;
 }
-.btn-register{
-    background-color: #4d197c!important;
-    color: white!important;
+
+.div-button {
+  display: flex;
 }
-.b_day, .b_day>i{
-    height: unset!important;
+
+.btn-register {
+  background-color: #fbbd08 !important;
+  color: white !important;
+  margin: auto !important;
 }
-.clndr-control>div>button{
-    width: unset!important;
-    height: unset!important;
+.b_day,
+.b_day > i {
+  height: unset !important;
 }
-.b_day>i{
-    top: 19px!important;
+.clndr-control > div > button {
+  width: unset !important;
+  height: unset !important;
 }
-#modal-sign-up{
-    height: auto!important;
-    top: auto!important;
-    left: auto!important;
-    bottom: auto!important;
-    right: auto!important;
+.b_day > i {
+  top: 19px !important;
 }
-#modal-sign-up>div>button>a{
-    text-decoration: none!important;
-    color: white;
+#modal-sign-up {
+  height: auto !important;
+  top: auto !important;
+  left: auto !important;
+  bottom: auto !important;
+  right: auto !important;
 }
-#modal-sign-up>div>button{
-    background-color: #4d197c!important;;
+#modal-sign-up > div > button > a {
+  text-decoration: none !important;
+  color: white;
+}
+#modal-sign-up > div > button {
+  background-color: #4d197c !important;
+}
+
+.sign-up-validation {
+  display: block;
+  position: absolute;
+  left: 0%;
+  margin: 5px 0;
+  font-weight: 500;
+  font-size: 13px;
+  bottom: -40%;
+}
+
+.div-field.b_day .field {
+  display: block !important;
 }

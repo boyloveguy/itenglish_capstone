@@ -44,13 +44,13 @@ const ExamDetails = (props) => {
             isEditQuestion  : ''
         })
 
-        const url = "http://localhost/itenglish_capstone/server/public/api/refer_exam";
+        const url = "http://localhost:8000/api/refer_exam/" + exam_id;
 
         useEffect(async () => {            
             let formData = new FormData();
             formData.append('exam_id', exam_id);
             await axios({
-                method  : 'POST',
+                method  : 'get',
                 url     : url,
                 dataType: 'jsonp',
                 data    : formData,
@@ -69,7 +69,6 @@ const ExamDetails = (props) => {
                 let question    = [];              
                 let major       = response.data.majors;
                 let exam_types  = response.data.exam_types;
-
                 setExam(prev => ({
                     ...prev,
                     isLoading   : false,
@@ -192,7 +191,7 @@ const ExamDetails = (props) => {
                 formData.append('user_id', exam.user_id);
                 formData.append('type_save', exam_id == 0? 0 : 1);
 
-                const url_save_exam = 'http://localhost/itenglish_capstone/server/public/api/save_exam';
+                const url_save_exam = 'http://localhost:8000/api/save_exam';
 
                 axios({
                     method  : 'POST',
@@ -275,7 +274,7 @@ const ExamDetails = (props) => {
                         let formData = new FormData();
                         formData.append('exam_id', exam_id);
     
-                        const url_delete_exam = 'http://localhost/itenglish_capstone/server/public/api/delete_exam';
+                        const url_delete_exam = 'http://localhost:8000/api/delete_exam';
     
                         axios({
                             method  : 'POST',
@@ -381,7 +380,7 @@ const ExamDetails = (props) => {
                         formData.append('exam_id', exam_id);
                         formData.append('ques_id', data);
     
-                        const url_delete_exam = 'http://localhost/itenglish_capstone/server/public/api/remove_question';
+                        const url_delete_exam = 'http://localhost:8000/api/remove_question';
     
                         axios({
                             method  : 'POST',

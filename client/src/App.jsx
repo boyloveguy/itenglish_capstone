@@ -13,6 +13,29 @@ import ExamExplain from './components/Exam/ExamExplain.jsx';
 import DoExam from './components/Exam/DoExam.jsx';
 import AddSpeaking from './components/Exam/AddSpeaking.jsx';
 import VideoContainer from './containers/VideoContainer';
+import LoginContainer from "./containers/LoginContainer";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import Dashboard from "./components/Dashboard/Dashboard";
+import ResetForgotPassword from "./components/ForgotPassword/ResetForgotPassword";
+import UpdatePassword from "./components/ForgotPassword/UpdatePassword";
+import MyProfile from "./components/MyProfile/MyProfile";
+import ChangePassword from "./components/ChangePassword/ChangePassword";
+import RankBoard from './components/Ranking/RankBoard';
+import Role from './components/RoleScreen/Role';
+import axios from "axios";
+
+// axios.defaults.baseURL = "http://localhost:8000/";
+axios.defaults.headers.post['Content-Type']= 'application/json';
+axios.defaults.headers.post['Accept']='application/json';
+axios.defaults.withCredentials = true;
+
+// set header token incoming request
+axios.interceptors.request.use(function(config){
+   const token = localStorage.getItem("userToken");
+   config.headers.Authorization = token ? `Bearer ${token}` : '';
+   return config;
+})
+
 
 class App extends Component{
   render(){
@@ -24,14 +47,22 @@ class App extends Component{
           <Route exact path="/sign-up" component={SignUpContainer}/>          
           <Route exact path="/" component={HomeContainer}/>
           <Route exact path="/home" component={HomeContainer}/>
-          <Route exact path="/exam" component={ExamContainer}/>
-          <Route exact path="/exam-details/:exam_id" component={ExamDetails}/>
-          <Route exact path="/add-question/:exam_id/:exam_type/:add_type/:ques_id" component={AddQuestion}/>
-          <Route exact path="/add-from-question-pool/:exam_id/:examType" component={AddFromQuestionPool}/>
-          <Route exact path="/exam-explain/:exam_id" component={ExamExplain}/>
-          <Route exact path="/do-exam/:exam_id" component={DoExam}/>
-          <Route exact path="/add-speaking/:exam_id/:exam_type/:add_type/:ques_id" component={AddSpeaking}/>
-          <Route exact path="/video" component={VideoContainer}/>
+          <ProtectedRoute exact path="/exam" component={ExamContainer}/>
+          <ProtectedRoute exact path="/exam-details/:exam_id" component={ExamDetails}/>
+          <ProtectedRoute exact path="/add-question/:exam_id/:exam_type/:add_type/:ques_id" component={AddQuestion}/>
+          <ProtectedRoute exact path="/add-from-question-pool/:exam_id/:examType" component={AddFromQuestionPool}/>
+          <ProtectedRoute exact path="/exam-explain/:exam_id" component={ExamExplain}/>
+          <ProtectedRoute exact path="/do-exam/:exam_id" component={DoExam}/>
+          <ProtectedRoute exact path="/add-speaking/:exam_id/:exam_type/:add_type/:ques_id" component={AddSpeaking}/>
+          <ProtectedRoute exact path="/video" component={VideoContainer}/>
+          <Route exact path="/login" component={LoginContainer}/>
+          <ProtectedRoute exact path="/dashboard" component={Dashboard} />
+          <Route  path="/password_reset/:token" component={UpdatePassword}/>
+          <Route exact path="/password_reset" component={ResetForgotPassword}/>
+          <ProtectedRoute exact path="/user" component={MyProfile}/>
+          <ProtectedRoute exact path="/change_password" component={ChangePassword}/>
+          <Route exact path="/rank-board" component={RankBoard}/>
+          <ProtectedRoute exact path="/role" component={Role}/>
         </Switch>          
       </div>
     );

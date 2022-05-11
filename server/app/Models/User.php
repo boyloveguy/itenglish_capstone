@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -19,11 +18,24 @@ class User extends Authenticatable
      * @var array<int, string>
      */
 
+    public function ranking(){
+        return $this->hasOne(Ranking::class);
+    }
+
+    public function exam_points(){
+        return $this->hasMany(ExamPoint::class, 'user_id');
+    }
+
     protected $fillable = [
-        'name',
-        'email',
+        'id',
+        'user_name',
+        'user_fname',
+        'user_lname',
         'password',
-        'avatar'
+        'user_birthday',
+        'user_avatar',
+        'role_id',
+        'email'
     ];
 
     /**
@@ -33,7 +45,10 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'remember_token',
+        'password'
     ];
+
+    public $timestamps  = false;
 
     /**
      * The attributes that should be cast.
@@ -46,16 +61,12 @@ class User extends Authenticatable
 
 
 
+
     public function sendPasswordResetNotification($token)
     {
 
         $url = 'http://localhost:3000/password_reset/' . $token;
 
         $this->notify(new ResetPasswordNotification($url));
-    }
-
-    public function createToken($token)
-    {
-        return $token;
     }
 }

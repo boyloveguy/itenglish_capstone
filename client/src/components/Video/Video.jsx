@@ -21,7 +21,7 @@ const Video = (props) => {
         listUserOnline: []
     })
 
-    const url = "http://localhost/itenglish_capstone/server/public/api/get_user_online";
+    const url = "http://localhost:8000/api/get_user_online";
 
     useEffect(async () => {
         let formData = new FormData();

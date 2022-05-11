@@ -47,7 +47,7 @@ const AddQuestion = (props) => {
     })
 
     if(ques_id != 0){
-        const url = "http://localhost/itenglish_capstone/server/public/api/refer_question";
+        const url = "http://localhost:8000/api/refer_question";
 
         useEffect(async () => {            
             let formData = new FormData();
@@ -194,7 +194,7 @@ const AddQuestion = (props) => {
                     formData.append('ques_image', null);
                 }
 
-                const url = 'http://localhost/itenglish_capstone/server/public/api/save_question';
+                const url = 'http://localhost:8000/api/save_question';
                 axios({
                     method  : 'POST',
                     url     : url,

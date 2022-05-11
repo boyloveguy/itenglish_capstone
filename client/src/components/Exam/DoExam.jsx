@@ -24,7 +24,7 @@ const DoExam = (props) => {
         exam_type   : ''
     });
 
-    const url = "http://localhost/itenglish_capstone/server/public/api/refer_do_exam";
+    const url = "http://localhost:8000/api/refer_do_exam";
 
     useEffect(async () => {
         try {
@@ -216,7 +216,7 @@ const DoExam = (props) => {
                         denyButtonText      : `Do another exam`,
                     }).then((results) => {
                         if (results.isConfirmed) {
-                                                        
+                            window.location.href = `/rank-board`                    
                         }
                         if(results.isDenied){
                             window.location.href = `/exam`
@@ -241,7 +241,7 @@ const DoExam = (props) => {
             formData.append('user_id', cookies.get('user_id'));
             formData.append('point', point);
 
-            const url = 'http://localhost/itenglish_capstone/server/public/api/submit_exam_point';
+            const url = 'http://localhost:8000/api/submit_exam_point';
             axios({
                 method  : 'POST',
                 url     : url,
