@@ -103,7 +103,7 @@ const ExamExplain = (props) => {
                     <Table.Body>
                         <Table.Row>
                             <Table.Cell width={4}>Exam form</Table.Cell>
-                            <Table.Cell>{examInfo.type_id == '1'? 'Multichoice questions' : 'Pronouce'}</Table.Cell>
+                            <Table.Cell>{examInfo.type_id === '1'? 'Multichoice questions' : 'Pronouce'}</Table.Cell>
                         </Table.Row>
                         <Table.Row>
                             <Table.Cell>Author</Table.Cell>
@@ -123,7 +123,7 @@ const ExamExplain = (props) => {
                         </Table.Row>
                     </Table.Body>
                 </Table>
-                <Button color='yellow' onClick={handleClickDoExam}>Begin</Button>
+                <Button color='primary' onClick={handleClickDoExam}>Begin</Button>
             </Container>
             <div
                 style={{

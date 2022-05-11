@@ -79,10 +79,10 @@ const ExamTable = (props) =>{
                         tooltip:"Hide/Show Filter option",
                         isFreeAction: true
                     },
-                    (user_role != '2' ?
+                    (user_role !== '2' ?
                     // user_role == '1' && 
                     {
-                        icon:()=><Button color='yellow'>Edit</Button>,
+                        icon:()=><Button color='primary'>Edit</Button>,
                         tooltip: 'Edit Exam',
                         onClick:(e, data)=>handleClickEditExam(data)
                     } : '')

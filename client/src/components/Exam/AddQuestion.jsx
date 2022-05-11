@@ -12,7 +12,6 @@ import Swal from 'sweetalert2';
 
 const cookies       = new Cookies();
 const answer_arr    = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-const max_answer    = 4;
 
 const AddQuestion = (props) => {
     const { exam_id, exam_type, add_type, ques_id } = useParams();
@@ -78,7 +77,7 @@ const AddQuestion = (props) => {
                         ans_id  : answers[i].ans_id,
                         ans_desc: answers[i].ans_desc
                     });
-                    if(answers[i].is_correct_ans == 1){
+                    if(answers[i].is_correct_ans === 1){
                         is_correct_ans = answer_arr[i];
                     }
                 }
@@ -92,7 +91,7 @@ const AddQuestion = (props) => {
                     isCorrectAns: is_correct_ans
                 }))                
 
-                if(quesImage.length > 0 && quesImage.length != ['']){
+                if(quesImage.length > 0 && quesImage.length !== ['']){
                     for(let i = 0; i < quesImage.length; i++){
                         quesImage[i] = '/images/exam/' + quesImage[i];
                     }
@@ -167,9 +166,9 @@ const AddQuestion = (props) => {
                 }
             }
 
-            if (    question.quesPoint  != '' 
-                &&  question.quesText   != '' 
-                &&  check_empty_ans     != 1
+            if (    question.quesPoint  !== '' 
+                &&  question.quesText   !== '' 
+                &&  check_empty_ans     !== 1
             ){
                 setQuestion(prev => ({
                     ...prev,
@@ -222,12 +221,12 @@ const AddQuestion = (props) => {
                             title               : response.data.message,
                             icon                : 'success',
                             confirmButtonColor  : '#3085d6',
-                            confirmButtonText   : add_type != '0' ? 'Go to Exam Detail Page': 'Go to Question Pool Page',
+                            confirmButtonText   : add_type !== '0' ? 'Go to Exam Detail Page': 'Go to Question Pool Page',
                             showDenyButton      : true,
                             denyButtonText      : `Continue add new question`,
                         }).then((results) => {
                             if (results.isConfirmed) {
-                                if(add_type == '0'){
+                                if(add_type === '0'){
                                     window.location.href = `/add-from-question-pool/${exam_id}/${exam_type}`;
                                 }else{
                                     window.location.href = `/exam-details/${exam_id}`;
@@ -263,7 +262,7 @@ const AddQuestion = (props) => {
     const handleChangeAnsDesc = (data, e) =>{
         let tmp_arr = question.ansDesc;
         for(let i = 0; i < tmp_arr.length; i++){
-            if(i == data){
+            if(i === data){
                 tmp_arr[i].ans_desc = e.target.value
             }            
         }
@@ -282,7 +281,7 @@ const AddQuestion = (props) => {
             <Loader active={question.isLoading} size='big'/>
             <Container className='div-exam-questions mar-bot-20'>
                 <div className='mar-bot-20'>
-                    {add_type == '0'? '' : <Label size='big' color='teal' tag>Exam ID: {exam_id}</Label>}                    
+                    {add_type === '0'? '' : <Label size='big' color='blue' tag>Exam ID: {exam_id}</Label>}                    
                     <Label size='big' color='blue' tag>Add Question</Label>                   
                 </div>
                 <Form>
@@ -419,7 +418,7 @@ const AddQuestion = (props) => {
                         </div>
                     </div>
                     <div style={{ textAlign: 'center' }}>
-                        <Button type='submit' className='btn-register' onClick={handleSaveQuestion}>Save Question</Button>
+                        <Button color='primary' type='submit' className='btn-register' onClick={handleSaveQuestion}>Save Question</Button>
                     </div>
                 </Form>
             </Container>

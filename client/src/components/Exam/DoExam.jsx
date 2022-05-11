@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createElement } from 'react';
+import React, { useState, useEffect} from 'react';
 import { Button, Loader, Container, Label, Radio} from 'semantic-ui-react';
 import { Helmet } from 'react-helmet';
 import './Exam.css';
@@ -77,7 +77,7 @@ const DoExam = (props) => {
                         questions   : response.data.questions
                     }))
 
-                    if(temp_type == 1) {
+                    if(temp_type === 1) {
                         setExamInfo(prev => ({
                             ...prev,
                             answers     : response.data.answers,
@@ -133,7 +133,7 @@ const DoExam = (props) => {
         let temp_arr = [];
         for (let i = 0; i < ans_num.length; i++) {
             for (let j = 0; j < 4; j++) {
-                if (ans_num[i][j].is_correct_ans == '1') {
+                if (ans_num[i][j].is_correct_ans === '1') {
                     temp_arr.push({
                         ques_id: ans_num[i][j].ques_id,
                         ans_id: ans_num[i][j].ans_id,
@@ -149,7 +149,7 @@ const DoExam = (props) => {
         try {
             let tmp_arr = examInfo.checked;
             for(let i = 0; i < tmp_arr.length; i++){
-                if(i == index){
+                if(i === index){
                     tmp_arr[i] = {
                         ques_id: ques_id,
                         ans_id: ans_id,
@@ -182,11 +182,11 @@ const DoExam = (props) => {
                     let final_point = 0;
                     let max_point   = 0;
 
-                    if(examInfo.exam_type == 1){
+                    if(examInfo.exam_type === 1){
                         for(let i = 0; i < examInfo.checked.length; i++){
                             max_point += parseFloat(examInfo.checked[i].ques_point);
-                            if( examInfo.checked[i].ques_id == examInfo.correct_ans[i].ques_id &&
-                                examInfo.checked[i].ans_id == examInfo.correct_ans[i].ans_id
+                            if( examInfo.checked[i].ques_id === examInfo.correct_ans[i].ques_id &&
+                                examInfo.checked[i].ans_id === examInfo.correct_ans[i].ans_id
                             ){
                                 final_point += parseFloat(examInfo.checked[i].ques_point);
                             }
@@ -312,7 +312,7 @@ const DoExam = (props) => {
             <MenuDiv activeItem={'exams and tests'} />
             <Loader active={examInfo.isLoading} size='big'/>
             <Container className='div-exam-explain mar-bot-20'>
-                {examInfo.exam_type == 1 ?
+                {examInfo.exam_type === 1 ?
                     examInfo.questions.map((ques, index) => {
                         return (
                             <div style={{ marginTop: 20 }}>
@@ -366,7 +366,7 @@ const DoExam = (props) => {
                     })
                 }
                                 
-                <Button style={{marginTop: 20}} color='yellow' onClick={handleClickSubmit}>Submit</Button>
+                <Button style={{marginTop: 20}} color='primary' onClick={handleClickSubmit}>Submit</Button>
             </Container>
             <div
                 style={{

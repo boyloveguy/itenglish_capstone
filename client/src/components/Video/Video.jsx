@@ -11,9 +11,6 @@ import Swal from 'sweetalert2';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
-cookies.set('user_id', '3', { path: '' });
-cookies.set('user_name', 'Administrator', { path: '' });
-cookies.set('user_role', '1', { path: '' });
 
 const Video = (props) => {
     const [videoInfo, setVideoInfo] = useState({
@@ -56,10 +53,6 @@ const Video = (props) => {
             });
     }, []);
 
-    const handleClickCall = () => {
-        console.log(1);
-    }
-
     return (
         <div className="pad-top-150">
             <Helmet>
@@ -68,7 +61,6 @@ const Video = (props) => {
             <MenuDiv activeItem={'learn'} />
             <Loader active={videoInfo.isLoading} size='big' />
             <Container className='div-video mar-bot-20'>
-                {/* <VideoChat/> */}
                 <Grid columns={3} divided>
                     <Card.Group style={{ margin: 0, padding: 0 }} className='card-group'>
                         {
@@ -80,7 +72,6 @@ const Video = (props) => {
                                                 <Card.Content>
                                                     <Image
                                                         floated='right'
-                                                        // size='mini'
                                                         src={key.user_avatar == '' || key.user_avatar == null ? '/images/profile/avatar_default.jpg' : 'images/profile/' + key.user_avatar}
                                                     />
                                                     <Card.Header>{key.user_name}</Card.Header>
@@ -93,9 +84,9 @@ const Video = (props) => {
                                                     <div className='ui two buttons'>
                                                         <Button 
                                                             animated='vertical' 
-                                                            color='green'
+                                                            color='primary'
                                                             onClick={()=>{
-                                                                console.log(key.user_id)
+                                                                window.location.href = `/video-check`
                                                             }}
                                                             className='ahaha'
                                                         >

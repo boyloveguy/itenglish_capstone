@@ -101,13 +101,6 @@ class SignUp extends Component {
   }
 
   handleSignUp(e) {
-    // e.preventDefault();
-    // let parent_date = document.getElementsByClassName("b_day");
-    // this.state.b_day = parent_date[0].firstChild.value;
-    // let { username, f_name, l_name, b_day, email, password, conf_pass, role } =
-    //   this.state;
-
-    // const errs = this.validate(data);
     
     if (this.validator.allValid()) {
       this.setState({

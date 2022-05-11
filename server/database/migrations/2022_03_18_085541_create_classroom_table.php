@@ -18,13 +18,13 @@ return new class extends Migration
             $table->string('class_name', 50)->unique();
             $table->string('class_desc', 1000)->nullable();
             $table->integer('max_member')->unsigned();
-            $table->integer('max_join')->unsigned();
+            // $table->integer('member_join')->unsigned();
             $table->dateTimeTz('cre_date', $precision = 0);
             $table->integer('cre_user')->unsigned();
             $table->dateTimeTz('upd_date', $precision = 0);
             $table->integer('upd_user')->unsigned();
-            $table->foreign('cre_user')->references('user_id')->on('user')->onUpdate('cascade');
-            $table->foreign('upd_user')->references('user_id')->on('user')->onUpdate('cascade');
+            $table->foreign('cre_user')->references('id')->on('users')->onUpdate('cascade');
+            $table->foreign('upd_user')->references('id')->on('users')->onUpdate('cascade');
         });
     }
 

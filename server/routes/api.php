@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PasswordResetLinkController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\VideoController;
+use App\Http\Controllers\VocabularyController;
 
 Route::post('login', [AuthController::class, 'store']);
 Route::middleware('auth:sanctum')->group(function () {
@@ -43,4 +45,11 @@ Route::post('refer_question', [ExamController::class, 'refer_question']);
 Route::post('save_speaking', [ExamController::class, 'save_speaking']);
 Route::post('remove_question', [ExamController::class, 'remove_question']);
 Route::post('submit_exam_point', [ExamController::class, 'submit_exam_point']);
-Route::post('get_user_online', [VideoController::class, 'get_user_online']);
+// video
+Route::post('/get_user_online', [VideoController::class, 'get_user_online']);
+// vocabulary
+Route::post('/get_vocabulary', [VocabularyController::class, 'get_vocabulary']);
+Route::post('/get_info', [VocabularyController::class, 'get_info']);
+Route::post('/save_vocabulary', [VocabularyController::class, 'save_vocabulary']);
+Route::post('/get_vocabulary_by_word', [VocabularyController::class, 'get_vocabulary_by_word']);
+Route::post('/delete_vocabulary', [VocabularyController::class, 'delete_vocabulary']);

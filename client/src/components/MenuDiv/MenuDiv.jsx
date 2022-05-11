@@ -41,16 +41,20 @@ class MenuDiv extends Component {
                         active={this.props.activeItem === 'learn'}                        
                     >
                         <Dropdown.Menu>
-                            <Dropdown.Item>Vocabulary</Dropdown.Item>
+                            <Dropdown.Item
+                                as={Link}
+                                to='/vocabulary'
+                                onClick={this.handleItemClick}
+                                name='learn' 
+                            >Vocabulary</Dropdown.Item>
                             <Dropdown.Item>Join a Classroom</Dropdown.Item>
                             <Dropdown.Item
                                 as={Link}
                                 to='/video'
                                 onClick={this.handleItemClick}
                                 name='learn' 
-                            >Video with Strangers
+                            >Video Call
                             </Dropdown.Item>
-                            <Dropdown.Item>Supporting Documents</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
                     <Menu.Item
@@ -70,9 +74,6 @@ class MenuDiv extends Component {
                         className='pad-bot-26'
                     />
                     <Menu.Menu position='right' className='pad-bot-10'>
-                        <Menu.Item>
-                            <Input className='icon txt_search' icon='search' placeholder='Search...' />
-                        </Menu.Item>
                         <Menu.Item>
                             <i class="user circle icon"></i>                        
                         </Menu.Item>

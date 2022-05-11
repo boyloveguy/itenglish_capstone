@@ -23,8 +23,8 @@ return new class extends Migration
             $table->dateTimeTz('upd_date', $precision = 0)->nullable();
             $table->integer('upd_user')->unsigned()->nullable();
             $table->foreign('ques_id')->references('ques_id')->on('question_pool')->onUpdate('cascade');
-            $table->foreign('cre_user')->references('user_id')->on('user')->onUpdate('cascade');
-            $table->foreign('upd_user')->references('user_id')->on('user')->onUpdate('cascade');
+            $table->foreign('cre_user')->references('id')->on('users')->onUpdate('cascade');
+            $table->foreign('upd_user')->references('id')->on('users')->onUpdate('cascade');
         });
     }
 

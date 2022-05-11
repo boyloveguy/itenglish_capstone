@@ -133,7 +133,7 @@ class ExamController extends Controller
             }
             return response()->json(array('success' => true, 'message' => 'Save successfull!', 'exam_id' =>$exam_id), 200);
         } catch (\Exception $e) {
-            return response()->json(array('success' => false, 'message' => 'An error occurred', 'error' => $e), 200);
+            return response()->json(array('success' => false, 'message' => 'An error occurred', 'error' => $e->getMessage()), 200);
         }
     }
 

@@ -5,15 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Classroom extends Model
+class VocabularyExample extends Model
 {
     public $timestamps  = false;
-    protected $table    = 'classroom';
-    protected $fillable =   ['class_id', 
-                            'class_name', 
-                            'class_desc', 
-                            // 'member_member', 
-                            'max_join',
+    protected $table    = 'vocabulary_example';
+    protected $fillable =   ['id',
+                            'voc_id', 
+                            'example',
                             'cre_date', 
                             'cre_user',
                             'upd_date',

@@ -9,6 +9,10 @@
     background-color: white;
     min-height: 500px;
 }
+.div-video-check{
+    padding: 30px!important;
+    min-height: 370px;
+}
 .card-group{
     justify-content: center!important;
 }
@@ -19,4 +23,12 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+.video-check-grid{
+    width: fit-content!important;
+    margin: 0 auto!important;
+    border: 1px solid;
+    background-color: #fff;
+    padding: 10px!important;
+    border-radius: 7px;
 }

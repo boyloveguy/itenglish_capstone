@@ -13,6 +13,7 @@ import ExamExplain from './components/Exam/ExamExplain.jsx';
 import DoExam from './components/Exam/DoExam.jsx';
 import AddSpeaking from './components/Exam/AddSpeaking.jsx';
 import VideoContainer from './containers/VideoContainer';
+<<<<<<< HEAD
 import LoginContainer from "./containers/LoginContainer";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Dashboard from "./components/Dashboard/Dashboard";
@@ -36,15 +37,24 @@ axios.interceptors.request.use(function(config){
    return config;
 })
 
+=======
+import VideoCheck from './components/Video/VideoCheck';
+import Vocabulary from './components/Vocabulary/Vocabulary';
+import VocabularyDetails from './components/Vocabulary/VocabularyDetails';
+import ShowVocabulary from './components/Vocabulary/ShowVocabulary';
+>>>>>>> Khuyen
 
 class App extends Component{
   render(){
     return (
       <div>   
         <Switch>
+          {/* Error screen */}
           <Route exact path="/404" component={Screen404}/>
           <Route exact path="/500" component={Screen500}/>
-          <Route exact path="/sign-up" component={SignUpContainer}/>          
+          {/* sign-up */}
+          <Route exact path="/sign-up" component={SignUpContainer}/>
+          {/* home */}
           <Route exact path="/" component={HomeContainer}/>
           <Route exact path="/home" component={HomeContainer}/>
           <ProtectedRoute exact path="/exam" component={ExamContainer}/>
@@ -54,15 +64,20 @@ class App extends Component{
           <ProtectedRoute exact path="/exam-explain/:exam_id" component={ExamExplain}/>
           <ProtectedRoute exact path="/do-exam/:exam_id" component={DoExam}/>
           <ProtectedRoute exact path="/add-speaking/:exam_id/:exam_type/:add_type/:ques_id" component={AddSpeaking}/>
-          <ProtectedRoute exact path="/video" component={VideoContainer}/>
           <Route exact path="/login" component={LoginContainer}/>
-          <ProtectedRoute exact path="/dashboard" component={Dashboard} />
           <Route  path="/password_reset/:token" component={UpdatePassword}/>
           <Route exact path="/password_reset" component={ResetForgotPassword}/>
           <ProtectedRoute exact path="/user" component={MyProfile}/>
           <ProtectedRoute exact path="/change_password" component={ChangePassword}/>
           <Route exact path="/rank-board" component={RankBoard}/>
           <ProtectedRoute exact path="/role" component={Role}/>
+          {/* video */}
+          <ProtectedRoute exact path="/video" component={VideoContainer}/>
+          <ProtectedRoute exact path="/video-check" component={VideoCheck}/>
+          {/* vocabulary */}
+          <ProtectedRoute exact path="/vocabulary" component={Vocabulary}/>
+          <ProtectedRoute exact path="/vocabulary-details/:voc_id" component={VocabularyDetails}/>
+          <ProtectedRoute exact path="/show-vocabulary/:voc_id" component={ShowVocabulary}/>
         </Switch>          
       </div>
     );
