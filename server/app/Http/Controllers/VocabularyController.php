@@ -11,7 +11,8 @@ use App\Models\VocabularyMeaning;
 use App\Models\VocabularySpeech;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
- 
+use Mockery\Undefined;
+
 class VocabularyController extends Controller
 {
     function get_vocabulary(Request $res){
@@ -63,6 +64,43 @@ class VocabularyController extends Controller
     function get_info(Request $res){
         try {
             $voc_id = $res->input('voc_id');
+            $disable_pre = true;
+            $disable_next = true;
+
+            if($res->input('type') == "pre"){
+                $temp = DB::table('vocabulary')
+                ->selectRaw('max(voc_id) as voc_id')
+                ->where('voc_id', '<', $voc_id)->get();
+
+                $tmp_id = '';
+                foreach($temp as $tmp){
+                    $tmp_id = $tmp->voc_id;
+                }
+
+                if($tmp_id == ''){
+                    $disable_pre = false;
+                }else{
+                    $voc_id = $tmp_id;
+                }
+            }
+
+            if($res->input('type') == "next"){
+                $temp = DB::table('vocabulary')
+                ->selectRaw('min(voc_id) as voc_id')
+                ->where('voc_id', '>', $voc_id)->get();
+
+                $tmp_id = '';
+                foreach($temp as $tmp){
+                    $tmp_id = $tmp->voc_id;
+                }
+
+                if($tmp_id == ''){
+                    $disable_next = false;
+                }else{
+                    $voc_id = $tmp_id;
+                }
+            }
+
             $parts_of_speech = DB::table('parts_of_speech')
             ->select('pos_id as value',
             'pos_name as label')
@@ -83,33 +121,33 @@ class VocabularyController extends Controller
                 ->select('vocabulary.voc_name'
                 ,   'vocabulary.spelling'
                 ,   'vocabulary.voc_id'
-                )->where('vocabulary.voc_id', '=', $res->input('voc_id'))->get();
+                )->where('vocabulary.voc_id', '=', $voc_id)->get();
 
                 $pos_list = DB::table('parts_of_speech')
                 ->join('vocabulary_speech', 'vocabulary_speech.pos_id', '=', 'parts_of_speech.pos_id')
                 ->join('vocabulary', 'vocabulary.voc_id', '=', 'vocabulary_speech.voc_id')
                 ->select('parts_of_speech.pos_id as value'
                 ,   'parts_of_speech.pos_name as label'
-                )->where('vocabulary.voc_id', '=', $res->input('voc_id'))->get();
+                )->where('vocabulary.voc_id', '=', $voc_id)->get();
 
                 $major_list = DB::table('it_type')
                 ->join('vocabulary_it_type', 'vocabulary_it_type.it_type_id', '=', 'it_type.it_type_id')
                 ->join('vocabulary', 'vocabulary_it_type.voc_id', '=', 'vocabulary.voc_id')
                 ->select('it_type.it_type_id as value'
                 ,   'it_type.type_name as label'
-                )->where('vocabulary.voc_id', '=', $res->input('voc_id'))->get();
+                )->where('vocabulary.voc_id', '=', $voc_id)->get();
 
                 $meaning_list = DB::table('vocabulary_meaning')
                 ->join('vocabulary', 'vocabulary_meaning.voc_id', '=', 'vocabulary.voc_id')
                 ->select('vocabulary_meaning.id'
                 ,   'vocabulary_meaning.meaning as vocValue'
-                )->where('vocabulary_meaning.voc_id', '=', $res->input('voc_id'))->get();
+                )->where('vocabulary_meaning.voc_id', '=', $voc_id)->get();
 
                 $example_list = DB::table('vocabulary_example')
                 ->join('vocabulary', 'vocabulary_example.voc_id', '=', 'vocabulary.voc_id')
                 ->select('vocabulary_example.id'
                 ,   'vocabulary_example.example as vocValue'
-                )->where('vocabulary_example.voc_id', '=', $res->input('voc_id'))->get();
+                )->where('vocabulary_example.voc_id', '=', $voc_id)->get();
             }
 
             return response()->json(array(
@@ -119,7 +157,10 @@ class VocabularyController extends Controller
                 'pos_list' => $pos_list,
                 'major_list' => $major_list,
                 'meaning_list' => $meaning_list,
-                'example_list' => $example_list
+                'example_list' => $example_list,
+                'voc_id' => $voc_id,
+                'disable_pre' => $disable_pre,
+                'disable_next' => $disable_next
             ), 200);
         } catch (\Exception $e) {
             return response()->json(array('error' => $e->getMessage()), 200);
@@ -169,7 +210,7 @@ class VocabularyController extends Controller
                     foreach($list_meaning as $value){
                         $voc_meaning                = new VocabularyMeaning;
                         $voc_meaning->voc_id        = $vocabulary->id;
-                        $voc_meaning->meaning       = $value;
+                        $voc_meaning->meaning       = $value->value;
                         $voc_meaning->cre_date      = Carbon::now()->toDateTimeString();
                         $voc_meaning->cre_user      = $res->input('user_id');
                         $voc_meaning->upd_user      = null;
@@ -184,7 +225,7 @@ class VocabularyController extends Controller
                     foreach($list_example as $value){
                         $voc_example                = new VocabularyExample;
                         $voc_example->voc_id        = $vocabulary->id;
-                        $voc_example->example       = $value;
+                        $voc_example->example       = $value->value;
                         $voc_example->cre_date      = Carbon::now()->toDateTimeString();
                         $voc_example->cre_user      = $res->input('user_id');
                         $voc_example->upd_user      = null;
@@ -199,9 +240,8 @@ class VocabularyController extends Controller
             else{
                 Vocabulary::where('voc_id', $voc_id)
                 ->update([
-                    'voc_name'     => $res->input('voc_name'),
-                    'voc_desc'     => !empty($res->input('voc_desc')) ? $res->input('voc_desc') : '',
-                    'spelling'    => $res->input('spelling'),
+                    'voc_name'      => $res->input('voc_name'),
+                    'spelling'      => $res->input('spelling'),
                     'upd_user'      => $res->input('user_id'),
                     'upd_date'      => Carbon::now()->toDateTimeString()
                 ]);
@@ -227,14 +267,64 @@ class VocabularyController extends Controller
                         $voc_it_type->save();
                     }
                 }
+
+                //table vocabulary_meaning           
+                $list_meaning = json_decode($res->input("list_meaning"));
+                if(count($list_meaning) > 0){
+                    foreach($list_meaning as $value){
+                        if($value->id != '0'){ //update 
+                            VocabularyMeaning::where([
+                                ['voc_id', '=', $voc_id]
+                            ,   ['id', '=', $value->id]])
+                            ->update([
+                                'meaning'     => $value->value,
+                                'upd_user'    => $res->input('user_id'),
+                                'upd_date'    => Carbon::now()->toDateTimeString()
+                            ]);
+                        }else{ //insert new
+                            $voc_meaning                = new VocabularyMeaning;
+                            $voc_meaning->voc_id        = $voc_id;
+                            $voc_meaning->meaning       = $value->value;
+                            $voc_meaning->cre_date      = Carbon::now()->toDateTimeString();
+                            $voc_meaning->cre_user      = $res->input('user_id');
+                            $voc_meaning->upd_user      = null;
+                            $voc_meaning->upd_date      = null;
+                            $voc_meaning->save();
+                        }                        
+                    }
+                }
+
+                //table vocabulary_example
+                $list_example = json_decode($res->input("list_example"));
+                if(count($list_example) > 0){
+                    foreach($list_example as $value){
+                        if($value->id != '0'){ //update 
+                            VocabularyExample::where([
+                                ['voc_id', '=', $voc_id]
+                            ,   ['id', '=', $value->id]])
+                            ->update([
+                                'example'     => $value->value,
+                                'upd_user'    => $res->input('user_id'),
+                                'upd_date'    => Carbon::now()->toDateTimeString()
+                            ]);
+                        }else{ //insert new
+                            $voc_example                = new VocabularyExample();
+                            $voc_example->voc_id        = $voc_id;
+                            $voc_example->example       = $value->value;
+                            $voc_example->cre_date      = Carbon::now()->toDateTimeString();
+                            $voc_example->cre_user      = $res->input('user_id');
+                            $voc_example->upd_user      = null;
+                            $voc_example->upd_date      = null;
+                            $voc_example->save();
+                        }                        
+                    }
+                }
             }
 
             return response()->json(array(
                 'success' => true, 
                 'message' => 'Save successfull!', 
-                'voc_id' => $voc_id,
-                'list_meaning' => $list_meaning,
-                'list_example' => $list_example
+                'voc_id' => $voc_id
             ), 200);
         } catch (\Exception $e) {
             return response()->json(array(

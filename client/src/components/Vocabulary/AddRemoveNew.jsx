@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from "react"
 import { Button, Icon, Form, TextArea } from "semantic-ui-react";
 
-function AddRemoveInputField(props) {
+function AddRemoveNew(props) {
     const [inputFields, setInputFields] = useState(props.value); 
 
     const addInputField = () => {
@@ -21,7 +21,6 @@ function AddRemoveInputField(props) {
         const { name, value } = evnt.target;
         const list = [...inputFields];
         list[index][name] = value;
-        console.log(name);
         setInputFields(list);
     }
 
@@ -29,8 +28,7 @@ function AddRemoveInputField(props) {
         <div>
             {
                 inputFields.map((data, index) => {
-                    const vocValue = data.vocValue;
-                    const id = data.id;
+                    const { vocValue } = data;
                     return (
                         <Form.Group>
                             <Form.Field
@@ -41,7 +39,7 @@ function AddRemoveInputField(props) {
                                 placeholder={props.placeholder}
                                 control={TextArea}
                                 width={(inputFields.length !== 1) ? 14 : 16}
-                                id={id}
+                                id={0}
                             />
                             {(inputFields.length !== 1) ?
                                 <Form.Button
@@ -61,4 +59,4 @@ function AddRemoveInputField(props) {
         </div>
     )
 }
-export default AddRemoveInputField
+export default AddRemoveNew
