@@ -25,8 +25,11 @@ class AuthController extends Controller
         }
 
         $user = auth()->user();
+        $isAdmin = auth()->user()->role()->first()->role_id == 1 ? true : false;
         //create token
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $isAdmin ? 
+            $user->createToken('auth_token',['admin'])->plainTextToken :
+       $user->createToken('auth_token', [])->plainTextToken;
 
         return response()->json([
             'token' => $token,
@@ -61,6 +64,7 @@ class AuthController extends Controller
 
     public function changePassword(Request $request)
     {
+
         $request->validate([
             'password' => 'required|password',
             'new_password' => 'required',

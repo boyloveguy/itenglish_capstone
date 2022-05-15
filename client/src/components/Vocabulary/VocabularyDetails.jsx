@@ -29,7 +29,7 @@ const VocabularyDetails = (props) => {
         voc_meanings: [],
     });
 
-    const url = "http://localhost/itenglish_capstone/server/public/api/get_info";
+    const url = "http://localhost:8000/api/get_info";
 
     useEffect(() => {
         setTimeout(
@@ -163,7 +163,7 @@ const VocabularyDetails = (props) => {
                         formData.append('list_meaning', JSON.stringify(getList("meaning")));
                         formData.append('list_example', JSON.stringify(getList("example")));
             
-                        const url = 'http://localhost/itenglish_capstone/server/public/api/save_vocabulary';
+                        const url = 'http://localhost:8000/api/save_vocabulary';
                         axios({
                             method: 'POST',
                             url: url,
@@ -258,7 +258,7 @@ const VocabularyDetails = (props) => {
                         let formData = new FormData();
                         formData.append('voc_id', vocDetails.voc_id);
             
-                        const url = 'http://localhost/itenglish_capstone/server/public/api/delete_vocabulary';
+                        const url = 'http://localhost:8000/api/delete_vocabulary';
                         axios({
                             method: 'POST',
                             url: url,

@@ -31,11 +31,14 @@ class SignUpController extends Controller
 
     function sign_up(Request $res)
     {
+
         $res->validate(
             [
-                'password' => 'required|confirmed'
+                'password' => 'required',
+                'conf_pass' => 'required|same:password'
             ]
         );
+
         try {
             $user                       = new User;
             $user->user_name            = $res->input('username');

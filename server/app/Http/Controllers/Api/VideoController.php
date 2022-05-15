@@ -19,7 +19,7 @@ class VideoController extends Controller
             ->join('user_status','user_status.user_id','=','users.id')       
             ->select('users.id'
             , 'users.user_name'
-            , 'users_status.status_id'
+            , 'user_status.status_id'
             , 'users.user_avatar'
             , 'user_fname'
             , 'user_lname')

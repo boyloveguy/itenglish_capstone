@@ -22,7 +22,8 @@ const ExamTable = (props) =>{
     const [filter, setFilter]       = useState(false);
     const [isLoading, setLoading]   = useState(true);
     const [tableData, setTableData] = useState([]);
-    const user_role                 = cookies.get('user_role')
+    const user_role                 = cookies.get('user_role');
+    const user_id                   = cookies.get('user_id')
     const url = "http://localhost:8000/api/exam";
     useEffect(() => {
         fetch(url)
@@ -51,7 +52,7 @@ const ExamTable = (props) =>{
 
     const handleClickDoExam=(data)=>{
         try {
-            window.location.href = `/exam-explain/${data.exam_id}`
+            window.location.href = `/exam-explain/${data.exam_id}`;            
         } catch (error) {
             console.log(error)
         }        
@@ -79,14 +80,20 @@ const ExamTable = (props) =>{
                         tooltip:"Hide/Show Filter option",
                         isFreeAction: true
                     },
-                    (user_role !== '2' ?
-                    // user_role == '1' && 
-                    {
-                        icon:()=><Button color='primary'>Edit</Button>,
+                    // (user_role !== 1 ? //admin
+                    // {
+                    //     icon:()=><Button color='primary'>Edit</Button>,
+                    //     tooltip: 'Edit Exam',
+                    //     onClick:(e, data)=>handleClickEditExam(data)                        
+                    // } 
+                    // : ''),
+                    rowData => ({
+                        // icon:()=>console.log(rowData.id),
+                        icon:()=> ((rowData.id == user_id || user_role == 1)? <Button color='primary'>Edit</Button> : ''),
                         tooltip: 'Edit Exam',
                         onClick:(e, data)=>handleClickEditExam(data)
-                    } : '')
-            ]}
+                    })
+                ]}
             />
         </div>        
     )

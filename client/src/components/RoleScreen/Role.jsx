@@ -19,6 +19,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Swal from "sweetalert2";
+import { withRouter } from "react-router-dom";
 
 class Role extends Component {
   constructor(props) {
@@ -59,7 +60,9 @@ class Role extends Component {
           role_name: res.data.role.role_name,
         });
       })
-      .catch((err) => {});
+      .catch(() => {
+        this.props.history.push("/")
+      });
   }
 
   addFormFields = () => {
@@ -158,6 +161,7 @@ class Role extends Component {
           url: "http://localhost:8000/api/remove",
           params: params,
         }).then((res) => {
+          debugger
           this.setState({
             accessible_screen: [
               ...accessible_screen.filter(
@@ -190,6 +194,7 @@ class Role extends Component {
       url: "http://localhost:8000/api/set_role_access",
       data: formData,
     }).then((res) => {
+      debugger
       Swal.fire("Success", res.data.message, "success");
 
         this.setState({
@@ -360,4 +365,4 @@ class Role extends Component {
     );
   }
 }
-export default Role;
+export default withRouter(Role);

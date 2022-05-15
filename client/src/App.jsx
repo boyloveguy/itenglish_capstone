@@ -13,7 +13,6 @@ import ExamExplain from './components/Exam/ExamExplain.jsx';
 import DoExam from './components/Exam/DoExam.jsx';
 import AddSpeaking from './components/Exam/AddSpeaking.jsx';
 import VideoContainer from './containers/VideoContainer';
-<<<<<<< HEAD
 import LoginContainer from "./containers/LoginContainer";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Dashboard from "./components/Dashboard/Dashboard";
@@ -23,6 +22,10 @@ import MyProfile from "./components/MyProfile/MyProfile";
 import ChangePassword from "./components/ChangePassword/ChangePassword";
 import RankBoard from './components/Ranking/RankBoard';
 import Role from './components/RoleScreen/Role';
+import VideoCheck from './components/Video/VideoCheck';
+import Vocabulary from './components/Vocabulary/Vocabulary';
+import VocabularyDetails from './components/Vocabulary/VocabularyDetails';
+import ShowVocabulary from './components/Vocabulary/ShowVocabulary';
 import axios from "axios";
 
 // axios.defaults.baseURL = "http://localhost:8000/";
@@ -37,12 +40,6 @@ axios.interceptors.request.use(function(config){
    return config;
 })
 
-=======
-import VideoCheck from './components/Video/VideoCheck';
-import Vocabulary from './components/Vocabulary/Vocabulary';
-import VocabularyDetails from './components/Vocabulary/VocabularyDetails';
-import ShowVocabulary from './components/Vocabulary/ShowVocabulary';
->>>>>>> Khuyen
 
 class App extends Component{
   render(){
@@ -71,13 +68,13 @@ class App extends Component{
           <ProtectedRoute exact path="/change_password" component={ChangePassword}/>
           <Route exact path="/rank-board" component={RankBoard}/>
           <ProtectedRoute exact path="/role" component={Role}/>
-          {/* video */}
+         
           <ProtectedRoute exact path="/video" component={VideoContainer}/>
           <ProtectedRoute exact path="/video-check" component={VideoCheck}/>
           {/* vocabulary */}
           <ProtectedRoute exact path="/vocabulary" component={Vocabulary}/>
           <ProtectedRoute exact path="/vocabulary-details/:voc_id" component={VocabularyDetails}/>
-          <ProtectedRoute exact path="/show-vocabulary/:voc_id" component={ShowVocabulary}/>
+          <ProtectedRoute exact path="/show-vocabulary/:voc_id" component={ShowVocabulary}/> 
         </Switch>          
       </div>
     );

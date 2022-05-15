@@ -6,7 +6,9 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { withRouter } from "react-router-dom";
 import SimpleReactValidator from "simple-react-validator";
+import Cookies from "universal-cookie";
 
+const cookies = new Cookies();
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -52,6 +54,9 @@ class Login extends Component {
             localStorage.setItem("userToken", res.data.token);
             localStorage.setItem("userName", nameUser);
             localStorage.setItem("userId", res.data.user.id);
+            cookies.set("user_id", res.data.user.id, { path: "" });
+            cookies.set("user_name", nameUser, { path: "" });
+            cookies.set("user_role", res.data.user.role_id, { path: "" });
             this.props.history.push("/");
           });
         })

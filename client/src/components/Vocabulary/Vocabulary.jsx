@@ -11,9 +11,9 @@ import Autocomplete from '@mui/material/Autocomplete';
 import $ from 'jquery';
 
 const cookies = new Cookies();
-cookies.set('user_id', '3', { path: '' });
-cookies.set('user_name', 'Administrator', { path: '' });
-cookies.set('user_role', '1', { path: '' });
+// cookies.set('user_id', '3', { path: '' });
+// cookies.set('user_name', 'Administrator', { path: '' });
+// cookies.set('user_role', '1', { path: '' });
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
 
@@ -27,7 +27,7 @@ const Vocabulary = (props) => {
         user_role: cookies.get('user_role')
     });
 
-    const url = "http://localhost/itenglish_capstone/server/public/api/get_vocabulary";
+    const url = "http://localhost:8000/api/get_vocabulary";
 
     useEffect(() => {
         fetch(url, {
@@ -81,7 +81,7 @@ const Vocabulary = (props) => {
 
         let formData = new FormData();
         formData.append('first_word', value);
-        const search_word_url = "http://localhost/itenglish_capstone/server/public/api/get_vocabulary_by_word"
+        const search_word_url = "http://localhost:8000/api/get_vocabulary_by_word"
 
         axios({
             method: 'POST',

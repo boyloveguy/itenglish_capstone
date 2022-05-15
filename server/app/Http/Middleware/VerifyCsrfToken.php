@@ -40,6 +40,12 @@ class VerifyCsrfToken extends Middleware
         'api/exam-details/*',
         'api/set_role_access',
         'api/screen/*',
-        'api/remove*'
+        'api/remove*',
+        'api/get_vocabulary',
+        'api/get_info',
+        'api/save_vocabulary',
+        'api/get_vocabulary_by_word',
+        'api/delete_vocabulary',
+        'api/get_user_online'
     ];
 }

@@ -89,17 +89,18 @@ class MyProfile extends Component {
 
       axios({
         method: "post",
-        url: "http://localhost:8000/api/user/" + localStorage.getItem("userId"),
+        url: "http://localhost:8000/api/user",
         data: formData,
       })
         .then((res) => {
+          
           const name = res.data.user.user_fname + " " + res.data.user.user_lname;
           this.setState({
             name: name,
           });
           Swal.fire("Success", "You have been update successfully", "success");
         })
-        .catch(() => {
+        .catch((err) => {
           Swal.fire({
             icon: "error",
             title: "Oops...",
@@ -236,18 +237,7 @@ class MyProfile extends Component {
                   <Form.Control type="email" value={email} disabled />
                 </Form.Group>
               </Row>
-              <Row>
-                <Form.Group as={Col} controlId="role">
-                  <Form.Label>Register as</Form.Label>
-                  <Form.Select
-                    defaultValue="Choose..."
-                    onChange={this.handleChange}
-                  >
-                    <option>Admin</option>
-                    <option>Customer</option>
-                  </Form.Select>
-                </Form.Group>
-              </Row>
+              
               <Row className="justify-content-sm-center">
                 <Col sm lg="2">
                   <Button className="button-my-profile" type="submit">

@@ -19,7 +19,7 @@ class MenuAuth extends Component {
 
   componentDidMount() {
     axios
-      .get("http://localhost:8000/api/user/" + localStorage.getItem("userId"))
+      .get("http://localhost:8000/api/user")
       .then((res) => {
         this.setState({
           user_name: res.data.user.user_name,
@@ -45,17 +45,16 @@ class MenuAuth extends Component {
           "You have been logged-out successfully",
           "success"
         );
-        this.props.history.push("/");
+        this.props.history.push("/login");
       })
       .catch((err) => {});
   };
 
   render() {
-    const { user_name } = this.state;
-    if (localStorage.getItem("userToken")) {
+    if (this.state.user_name) {
       return (
         <>
-          <Dropdown item text={user_name} className="user-name-menu">
+          <Dropdown item text={this.state.user_name} className="user-name-menu">
             <Dropdown.Menu>
               <Dropdown.Item>
                 <i className="user icon"></i>

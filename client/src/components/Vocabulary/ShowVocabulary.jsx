@@ -25,7 +25,7 @@ const ShowVocabulary = (props) => {
         majors: []
     });
 
-    const url = "http://localhost/itenglish_capstone/server/public/api/get_info";
+    const url = "http://localhost:8000/api/get_info";
 
     useEffect(() => {
         fetch(url, {

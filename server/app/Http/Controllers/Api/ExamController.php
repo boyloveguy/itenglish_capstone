@@ -22,14 +22,24 @@ class ExamController extends Controller
             ->join('it_type','it_type.it_type_id','=','exam.it_type_id')
             ->join('exam_type','exam_type.type_id','=','exam.type_id') 
             ->join('users','users.id','=','exam.cre_user')           
+            ->leftJoin('exam_point','exam.exam_id','=','exam_point.exam_id')
             ->select('exam.exam_id'
             , 'exam.exam_name'
             , 'it_type.type_name as major_name'
             , 'exam_type.type_name as type_exam'
-            , 'exam_type.type_name as submit_times'
+            , DB::raw('COUNT(exam_point.exam_id) as submit_times')
+            , 'users.user_name'
+            , 'users.id'
+            , 'users.role_id'
+            , 'exam.cre_date'
+            )->groupBy('exam.exam_id'
+            , 'exam.exam_name'
+            , 'it_type.type_name'
+            , 'exam_type.type_name'
             , 'users.user_name'
             , 'exam.cre_date'
-            )->get();            
+            )
+            ->get();            
             return response()->json(array('exam' => $exams), 200);
         } catch (\Exception $e) {
             return response()->json(array('error' => $e), 200);
@@ -102,10 +112,9 @@ class ExamController extends Controller
     function save_exam(Request $res){
         try {
             $type_save  = $res->input('type_save');
-            $exam_id    = '';
+            $exam_id    = $res->input('exam_id');
             //update
-            if($type_save == '1'){
-                $exam_id = $res->input('exam_id');
+            if($exam_id != '0'){
                 Exam::where('exam_id', $exam_id)
                 ->update([
                     'exam_name'     => $res->input('exam_name'),

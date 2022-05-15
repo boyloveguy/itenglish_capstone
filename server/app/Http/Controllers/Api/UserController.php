@@ -34,10 +34,11 @@ class UserController extends Controller
 
 	public function show()
 	{
+
 		$user = auth()->user();
 		$total_point = $user->exam_points()->sum('point');
 		$total_exam = $user->exam_points()->count('exam_id');
-		$ranking = ($total_point / $total_exam) * 100;
+		$ranking = $total_exam == 0 ? 0 : ($total_point / $total_exam) * 100;
 		
 
 		return response()->json([
@@ -49,7 +50,7 @@ class UserController extends Controller
 		]);
 	}
 
-	public function update(Request $request, $id)
+	public function update(Request $request)
 	{
 		$request->validate([
 			'user_fname' => 'required',
@@ -57,7 +58,8 @@ class UserController extends Controller
 			'user_avatar' => 'required',
 			'user_avatar.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
 		]);
-		$user = User::findOrFail($id);
+		
+		$user = auth()->user();
 		$user->user_fname = $request->user_fname;
 		$user->user_lname = $request->user_lname;
 		$user->user_birthday = $request->user_birthday;

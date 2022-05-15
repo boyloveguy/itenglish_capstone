@@ -139,9 +139,9 @@ class SignUp extends Component {
             let user_id = response.data.user_id;
             let user_name = response.data.user_name;
             let user_role = response.data.user_role;
-            cookies.set("user_id", user_id, { path: "" });
-            cookies.set("user_name", user_name, { path: "" });
-            cookies.set("user_role", user_role, { path: "" });
+            // cookies.set("user_id", user_id, { path: "" });
+            // cookies.set("user_name", user_name, { path: "" });
+            // cookies.set("user_role", user_role, { path: "" });
 
             Swal.fire({
               title: response.data.message,
@@ -150,7 +150,7 @@ class SignUp extends Component {
               confirmButtonText: "Go to Home Page",
             }).then((results) => {
               if (results.isConfirmed) {
-                window.location.href = `/home`;
+                window.location.href = `/login`;
               }
             });
           } else {

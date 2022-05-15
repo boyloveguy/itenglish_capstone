@@ -133,7 +133,7 @@ const DoExam = (props) => {
         let temp_arr = [];
         for (let i = 0; i < ans_num.length; i++) {
             for (let j = 0; j < 4; j++) {
-                if (ans_num[i][j].is_correct_ans === '1') {
+                if (ans_num[i][j].is_correct_ans === 1) {
                     temp_arr.push({
                         ques_id: ans_num[i][j].ques_id,
                         ans_id: ans_num[i][j].ans_id,
@@ -239,6 +239,7 @@ const DoExam = (props) => {
             let formData = new FormData();
             formData.append('exam_id', exam_id);
             formData.append('user_id', cookies.get('user_id'));
+            console.log(cookies.get('user_id'))
             formData.append('point', point);
 
             const url = 'http://localhost:8000/api/submit_exam_point';

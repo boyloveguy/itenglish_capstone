@@ -9,7 +9,7 @@ html {
 }
 .div-login {
   position: relative;
-  background-color: #fbbd08;
+  background-color: #db2828;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -41,7 +41,7 @@ html {
 .form-normal button.form-button {
   text-align: center;
   width: max-content;
-  background-color: #fbbd08;
+  background-color: #db2828;
   color: white;
   margin: 20px 0 0 0;
 }
@@ -63,7 +63,7 @@ html {
 .div-forgot-password a,
 .div-new-account a {
   font-size: 13px;
-  color: #fbbd08;
+  color: #db2828;
 }
 .div-forgot-password span,
 .div-new-account span {

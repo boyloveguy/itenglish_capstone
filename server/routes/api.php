@@ -9,21 +9,23 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PasswordResetLinkController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\RoleController;
-use App\Http\Controllers\VideoController;
-use App\Http\Controllers\VocabularyController;
+
+use App\Http\Controllers\Api\VocabularyController;
 
 Route::post('login', [AuthController::class, 'store']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('change-password', [AuthController::class, 'changePassword']);
     Route::get('user', [UserController::class, 'show']);
+    Route::put('user', [UserController::class, 'update']);
 });
-Route::get('user/{id}', [AuthController::class, 'show']);
-Route::get('roles', [RoleController::class, 'roles']);
+
+Route::get('roles', [RoleController::class, 'roles'])->middleware(['auth:sanctum', 'ability:admin']);
+// Route::get('roles', [RoleController::class, 'roles']);
 Route::post('forgot-password', [PasswordResetLinkController::class, 'forgotPassword']);
 Route::post('reset-password', [PasswordResetLinkController::class, 'resetPassword']);
 
-Route::put('user/{id}', [UserController::class, 'update']);
+
 Route::post('set_role_access',[RoleController::class, 'setRoleAccess']);
 Route::get('ranking', [UserController::class, 'rankBoard']);
 Route::get('screen/{id}', [RoleController::class, 'getRole']);

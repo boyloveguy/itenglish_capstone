@@ -35,9 +35,13 @@ class Exam extends Component {
                     <title>ITEnglish | Exams and tests</title>
                 </Helmet>
                 <MenuDiv activeItem={this.state.activeItem}/>
-                <Container style={{marginBottom: 20, textAlign: 'right'}}>
-                    <Button color='primary' onClick={this.handleClickAddExam}>Add new exam</Button>
-                </Container>
+                {
+                    this.state.user_role == '1' || this.state.user_role == '3'? 
+                    <Container style={{marginBottom: 20, textAlign: 'right'}}>
+                        <Button color='primary' onClick={this.handleClickAddExam}>Add new exam</Button>
+                    </Container>
+                    : ''
+                }                
                 <Container className="div_exam">
                     <div>
                         <ExamTable/>
