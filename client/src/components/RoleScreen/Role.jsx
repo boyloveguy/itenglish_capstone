@@ -161,7 +161,6 @@ class Role extends Component {
           url: "http://localhost:8000/api/remove",
           params: params,
         }).then((res) => {
-          debugger
           this.setState({
             accessible_screen: [
               ...accessible_screen.filter(
@@ -194,7 +193,6 @@ class Role extends Component {
       url: "http://localhost:8000/api/set_role_access",
       data: formData,
     }).then((res) => {
-      debugger
       Swal.fire("Success", res.data.message, "success");
 
         this.setState({

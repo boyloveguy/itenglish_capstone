@@ -114,6 +114,7 @@ class SignUp extends Component {
       formData.append("email", this.state.email);
       formData.append("password", this.state.password);
       formData.append("role", this.state.role);
+      formData.append("conf_pass", this.state.conf_pass);
 
       const url = "http://localhost:8000/api/sign_up";
       axios({

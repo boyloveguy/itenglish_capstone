@@ -199,11 +199,11 @@ class ExamController extends Controller
 
     function save_question(Request $res){
         try {
-            define('DOCROOT', $_SERVER['DOCUMENT_ROOT'].'/itenglish_capstone/client/public/images/exam/');
+            define('DOCROOT', dirname( __FILE__ , 7) .'\\itenglish_capstone\\client\\public\\images\\exam\\');
             $list_image         = '';
             $imagesLength       =  $res->input('images_length');
 
-            //mode update
+            // mode update
             if($res->input('ques_id') != '0'){
                 $ques_id = $res->input('ques_id');
                 $exam_id = $res->input('exam_id');
@@ -315,6 +315,7 @@ class ExamController extends Controller
             return response()->json(array(
                 'success' => true, 
                 'message' => 'Save successfull!'
+                // ,'abc' => DOCROOT
             ), 200);
         } catch (\Exception $e) {
             return response()->json(array(
@@ -536,7 +537,7 @@ class ExamController extends Controller
 
     function save_speaking(Request $res){
         try {
-            define('DOCROOT1', $_SERVER['DOCUMENT_ROOT'].'/itenglish_capstone/client/public/images/exam/');
+            define('DOCROOT1', dirname( __FILE__ , 7) .'\\itenglish_capstone\\client\\public\\images\\exam\\');
             $list_image     = '';
             $imagesLength   =  $res->input('images_length');
 
@@ -548,7 +549,7 @@ class ExamController extends Controller
                 //delete image in folder 
                 if($imagesLength > 0){
                     for( $i = 0; $i < $imagesLength; $i++){
-                        $target_file = DOCROOT . basename($_FILES['ques_image_'.$i]["name"]);
+                        $target_file = DOCROOT1 . basename($_FILES['ques_image_'.$i]["name"]);
                         if(file_exists($target_file)){
                             unlink($target_file);
                         }

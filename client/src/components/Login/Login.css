@@ -24,7 +24,7 @@ html {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 20%;
+  top: 28%;
 }
 
 .form-normal {
@@ -73,7 +73,15 @@ html {
   margin-bottom: 0;
 }
 
-.div-field{
+.div-logo {
+  width: 25%;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 11%;
+}
+
+.div-field {
   position: relative;
   margin-bottom: 30px !important;
 }

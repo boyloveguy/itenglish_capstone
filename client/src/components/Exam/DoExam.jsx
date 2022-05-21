@@ -238,8 +238,8 @@ const DoExam = (props) => {
 
             let formData = new FormData();
             formData.append('exam_id', exam_id);
-            formData.append('user_id', cookies.get('user_id'));
-            console.log(cookies.get('user_id'))
+            formData.append('user_id', localStorage.getItem('userId'));
+            // console.log(cookies.get('user_id'))
             formData.append('point', point);
 
             const url = 'http://localhost:8000/api/submit_exam_point';

@@ -15,7 +15,6 @@ import AddSpeaking from './components/Exam/AddSpeaking.jsx';
 import VideoContainer from './containers/VideoContainer';
 import LoginContainer from "./containers/LoginContainer";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
-import Dashboard from "./components/Dashboard/Dashboard";
 import ResetForgotPassword from "./components/ForgotPassword/ResetForgotPassword";
 import UpdatePassword from "./components/ForgotPassword/UpdatePassword";
 import MyProfile from "./components/MyProfile/MyProfile";
@@ -26,6 +25,8 @@ import VideoCheck from './components/Video/VideoCheck';
 import Vocabulary from './components/Vocabulary/Vocabulary';
 import VocabularyDetails from './components/Vocabulary/VocabularyDetails';
 import ShowVocabulary from './components/Vocabulary/ShowVocabulary';
+import ClassRoom from './components/ClassRoom/ClassRoom';
+import Payment from './components/Payment/Payment';
 import axios from "axios";
 
 // axios.defaults.baseURL = "http://localhost:8000/";
@@ -68,9 +69,14 @@ class App extends Component{
           <ProtectedRoute exact path="/change_password" component={ChangePassword}/>
           <Route exact path="/rank-board" component={RankBoard}/>
           <ProtectedRoute exact path="/role" component={Role}/>
-         
+          <ProtectedRoute exact path="/payment" component={Payment}/>
+          {/* Class */}
+          <Route exact path="/class" component={ClassRoom}/>
+
+          {/* Video */}
           <ProtectedRoute exact path="/video" component={VideoContainer}/>
           <ProtectedRoute exact path="/video-check" component={VideoCheck}/>
+
           {/* vocabulary */}
           <ProtectedRoute exact path="/vocabulary" component={Vocabulary}/>
           <ProtectedRoute exact path="/vocabulary-details/:voc_id" component={VocabularyDetails}/>

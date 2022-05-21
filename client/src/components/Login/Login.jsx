@@ -74,17 +74,17 @@ class Login extends Component {
   };
 
   render() {
-    const {email, password} = this.state;
+    const { email, password } = this.state;
     return (
       <React.Fragment>
         <div className="div-login">
           <Helmet>
             <title>Login</title>
           </Helmet>
+          <div className="div-logo">
+            <Image src="/images/logo.png" size="medium" />
+          </div>
           <div className="login-container">
-            <div className="div-logo">
-              <Image src="/images/logo.png" size="medium" />
-            </div>
             <Form onSubmit={this.handleSubmit} className="form-normal">
               <Form.Field className="div-field">
                 <label>Email</label>
@@ -95,12 +95,9 @@ class Login extends Component {
                   value={this.state.email}
                 />
 
-                {this.validator.message(
-                  "email",
-                  email,
-                  "required|email",
-                  { className: "text-danger validation" }
-                )}
+                {this.validator.message("email", email, "required|email", {
+                  className: "text-danger validation",
+                })}
               </Form.Field>
 
               <Form.Field className="div-field">
@@ -113,12 +110,9 @@ class Login extends Component {
                   onChange={this.handleChange}
                   value={this.state.password}
                 />
-                {this.validator.message(
-                  "password",
-                  password,
-                  "required",
-                  { className: "text-danger validation" }
-                )}
+                {this.validator.message("password", password, "required", {
+                  className: "text-danger validation",
+                })}
               </Form.Field>
 
               <Button className="form-button" type="submit">

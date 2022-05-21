@@ -29,6 +29,10 @@ class User extends Authenticatable
     public function role(){
         return $this->belongsTo(Role::class, 'role_id');
     }
+    
+    public function class_rooms(){
+        return $this->belongsToMany(ClassRoom::class, 'class_member');
+    }
 
     protected $fillable = [
         'id',

@@ -7,13 +7,16 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { withRouter } from "react-router-dom";
 import { FaLock } from "react-icons/fa";
+import { GrUserAdmin } from "react-icons/gr";
+import Cookies from "universal-cookie";
 
-
+const cookies = new Cookies();
 class MenuAuth extends Component {
   constructor(props) {
     super(props);
     this.state = {
       user_name: "",
+      role: ""
     };
   }
 
@@ -23,6 +26,8 @@ class MenuAuth extends Component {
       .then((res) => {
         this.setState({
           user_name: res.data.user.user_name,
+          role: res.data.role,
+          role_access: res.data.role_access
         });
       })
       .catch((error) => {
@@ -40,6 +45,10 @@ class MenuAuth extends Component {
         localStorage.removeItem("userName");
         localStorage.removeItem("userId");
 
+        cookies.remove("user_role");
+        cookies.remove("user_name");
+        cookies.remove("user_id");
+
         Swal.fire(
           "Success",
           "You have been logged-out successfully",
@@ -50,21 +59,33 @@ class MenuAuth extends Component {
       .catch((err) => {});
   };
 
+  renderRole = () => {
+    const {role_access} = this.state; 
+    
+    return role_access.length !==  0 ? (
+      <Dropdown.Item>
+        <GrUserAdmin />
+        <Link to={"/role"} className="p-2 my-profile">
+          Role
+        </Link>
+      </Dropdown.Item>
+    ) : null;
+  };
   render() {
-    if (this.state.user_name) {
+    const { user_name } = this.state;
+    //  debugger
+    if (user_name) {
       return (
         <>
-          <Dropdown item text={this.state.user_name} className="user-name-menu">
+          <Dropdown item text={user_name} className="user-name-menu">
             <Dropdown.Menu>
               <Dropdown.Item>
                 <i className="user icon"></i>
-                <Link
-                  to={"/user"}
-                  className="my-profile"
-                >
+                <Link to={"/user"} className="my-profile">
                   My Profile
                 </Link>
               </Dropdown.Item>
+              {this.renderRole()}
               <Dropdown.Item>
                 <FaLock />
                 <Link to={"/change_password"} className="p-2 my-profile">

@@ -79,10 +79,10 @@ const AddFromQuestionPool = (props) => {
 
     const handleClickAddNewQuestion = () => {
         try {       
-            if(examType === 1){
+            if(examType == 1){
                 window.location.href = `/add-question/${exam_id}/${examType}/${0}/${0}`
             }
-            if(examType === 2){
+            if(examType == 2){
                 window.location.href = `/add-speaking/${exam_id}/${examType}/${0}/${0}`
             }         
             

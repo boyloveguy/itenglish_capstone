@@ -5,7 +5,7 @@ import MenuDiv from "../MenuDiv/MenuDiv";
 import { Helmet } from "react-helmet";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { Loader } from "semantic-ui-react";
+import { Container, Loader } from "semantic-ui-react";
 import SimpleReactValidator from "simple-react-validator";
 
 class MyProfile extends Component {
@@ -93,8 +93,8 @@ class MyProfile extends Component {
         data: formData,
       })
         .then((res) => {
-          
-          const name = res.data.user.user_fname + " " + res.data.user.user_lname;
+          const name =
+            res.data.user.user_fname + " " + res.data.user.user_lname;
           this.setState({
             name: name,
           });
@@ -140,114 +140,125 @@ class MyProfile extends Component {
       name,
     } = this.state;
     return (
-      <div className="div-my-profile">
+      <div className="div-my-profile pad-top-150">
         <Helmet>
           <title>ITEnglish | Home</title>
         </Helmet>
         <MenuDiv />
         <Loader active={isLoading} size="big" />
-        <Form className="form-my-profile" onSubmit={this.handleSubmit}>
-          <Row>
-            <Col sm={4} className="div-left-4">
-              <Row className="justify-content-sm-center">
-                <h3>{name}</h3>
-                <div className="div-img">{this.previewImage()}</div>
-                <div className="div-input">
-                  <Form.Group>
+        <Container>
+          <Form className="form-my-profile" onSubmit={this.handleSubmit}>
+            <Row>
+              <Col sm={4} className="div-left-4">
+                <Row className="justify-content-sm-center">
+                  <h3>{name}</h3>
+                  <div className="div-img">{this.previewImage()}</div>
+                  <div className="div-input">
+                    <Form.Group>
+                      <Form.Control
+                        type="file"
+                        name="user_avatar"
+                        onChange={this.handleChangeFile}
+                      ></Form.Control>
+                    </Form.Group>
+                  </div>
+                </Row>
+
+                <Card className="text-center">
+                  <ListGroup variant="flush">
+                    <ListGroup.Item className="group-data">
+                      <p className="text-data">Ranking</p>
+                      <p className="data">{ranking}</p>
+                    </ListGroup.Item>
+                    <ListGroup.Item className="group-data">
+                      <p className="text-data">Total exams</p>
+                      <p className="data">{total_exam}</p>
+                    </ListGroup.Item>
+                    <ListGroup.Item className="group-data">
+                      {" "}
+                      <p className="text-data">Class entended</p>
+                      <span className="data">1</span>
+                    </ListGroup.Item>
+                  </ListGroup>
+                </Card>
+              </Col>
+              <Col sm={8} className="div-right-8">
+                <Row>
+                  <Form.Group as={Col} controlId="user_fname">
+                    <Form.Label>First Name</Form.Label>
                     <Form.Control
-                      type="file"
-                      name="user_avatar"
-                      onChange={this.handleChangeFile}
-                    ></Form.Control>
+                      type="text"
+                      value={user_fname}
+                      name="user_fname"
+                      onChange={this.handleChange}
+                    />
+                    {this.validator.message(
+                      "user_fname",
+                      user_fname,
+                      "required",
+                      { className: "text-danger profile-validation" }
+                    )}
                   </Form.Group>
-                </div>
-              </Row>
 
-              <Card className="text-center">
-                <ListGroup variant="flush">
-                  <ListGroup.Item className="group-data">
-                    <p className="text-data">Ranking</p>
-                    <p className="data">{ranking}</p>
-                  </ListGroup.Item>
-                  <ListGroup.Item className="group-data">
-                    <p className="text-data">Total exams</p>
-                    <p className="data">{total_exam}</p>
-                  </ListGroup.Item>
-                  <ListGroup.Item className="group-data">
-                    {" "}
-                    <p className="text-data">Class entended</p>
-                    <span className="data">1</span>
-                  </ListGroup.Item>
-                </ListGroup>
-              </Card>
-            </Col>
-            <Col sm={8} className="div-right-8">
-              <Row>
-                <Form.Group as={Col} controlId="user_fname">
-                  <Form.Label>First Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={user_fname}
-                    name="user_fname"
-                    onChange={this.handleChange}
-                  />
-                  {this.validator.message(
-                    "user_fname",
-                    user_fname,
-                    "required",
-                    { className: "text-danger profile-validation" }
-                  )}
-                </Form.Group>
+                  <Form.Group as={Col} controlId="user_lname">
+                    <Form.Label>Last Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={user_lname}
+                      name="user_lname"
+                      onChange={this.handleChange}
+                    />
+                    {this.validator.message(
+                      "user_lname",
+                      user_lname,
+                      "required",
+                      { className: "text-danger profile-validation" }
+                    )}
+                  </Form.Group>
+                </Row>
+                <Row>
+                  <Form.Group as={Col} controlId="user_birthday">
+                    <Form.Label>Birthday</Form.Label>
+                    <Form.Control
+                      type="date"
+                      value={user_birthday}
+                      name="user_birthday"
+                      onChange={this.handleChange}
+                    />
+                    {this.validator.message(
+                      "user_birthday",
+                      user_birthday,
+                      "required",
+                      { className: "text-danger profile-validation" }
+                    )}
+                  </Form.Group>
 
-                <Form.Group as={Col} controlId="user_lname">
-                  <Form.Label>Last Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={user_lname}
-                    name="user_lname"
-                    onChange={this.handleChange}
-                  />
-                  {this.validator.message(
-                    "user_lname",
-                    user_lname,
-                    "required",
-                    { className: "text-danger profile-validation" }
-                  )}
-                </Form.Group>
-              </Row>
-              <Row>
-                <Form.Group as={Col} controlId="user_birthday">
-                  <Form.Label>Birthday</Form.Label>
-                  <Form.Control
-                    type="date"
-                    value={user_birthday}
-                    name="user_birthday"
-                    onChange={this.handleChange}
-                  />
-                  {this.validator.message(
-                    "user_birthday",
-                    user_birthday,
-                    "required",
-                    { className: "text-danger profile-validation" }
-                  )}
-                </Form.Group>
+                  <Form.Group as={Col} controlId="email">
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control type="email" value={email} disabled />
+                  </Form.Group>
+                </Row>
 
-                <Form.Group as={Col} controlId="email">
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control type="email" value={email} disabled />
-                </Form.Group>
-              </Row>
-              
-              <Row className="justify-content-sm-center">
-                <Col sm lg="2">
-                  <Button className="button-my-profile" type="submit">
-                    Save change
-                  </Button>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        </Form>
+                <Row className="justify-content-sm-center">
+                  <Col sm lg="2">
+                    <Button className="button-my-profile" type="submit">
+                      Save change
+                    </Button>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          </Form>
+        </Container>
+        <div
+          style={{
+            textAlign: "center",
+            paddingTop: 80,
+            paddingBottom: 20,
+          }}
+        >
+          <p>© ITEnglish Copyright 2022</p>
+        </div>
       </div>
     );
   }

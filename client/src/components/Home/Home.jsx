@@ -4,6 +4,7 @@ import "./Home.css";
 import MenuDiv from "../MenuDiv/MenuDiv";
 import { Helmet } from "react-helmet";
 import Cookies from "universal-cookie";
+import { Link } from "react-router-dom";
 
 const cookies = new Cookies();
 
@@ -117,7 +118,7 @@ class Home extends Component {
                 Beginning readers must use the words they hear orally to make
                 sense of the words they see in print.
               </p>
-              <Button variant="outline-secondary" className="btn-go">
+              <Button variant="outline-secondary" className="btn-go" as={Link} to="/vocabulary">
                 Go
               </Button>
             </Col>
@@ -139,7 +140,7 @@ class Home extends Component {
                 course, that's also the catch—often there is little work to be
                 had.
               </p>
-              <Button variant="outline-secondary" className="btn-go">
+              <Button variant="outline-secondary" className="btn-go" as={Link} to="/class">
                 Go
               </Button>
             </Col>
@@ -173,7 +174,7 @@ class Home extends Component {
                 actually speak it! ITEnglish connects you with IT speakers to
                 chat with for free.
               </p>
-              <Button variant="outline-secondary" className="btn-go">
+              <Button variant="outline-secondary" className="btn-go" as={Link} to="/video">
                 Go
               </Button>
             </Col>
@@ -195,7 +196,7 @@ class Home extends Component {
                 help you find content on our website that is appropriate for
                 your English language ability.
               </p>
-              <Button variant="outline-secondary" className="btn-go">
+              <Button variant="outline-secondary" className="btn-go" as={Link} to="/exam">
                 Go
               </Button>
             </Col>

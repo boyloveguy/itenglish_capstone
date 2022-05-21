@@ -34,8 +34,7 @@ class ChangePassword extends Component {
 
   handleSubmit = () => {
     if (this.validator.allValid()) {
-      const { password, new_password, new_confirm_password } =
-        this.state;
+      const { password, new_password, new_confirm_password } = this.state;
       const formData = new FormData();
       formData.append("password", password);
       formData.append("new_password", new_password);
@@ -45,16 +44,18 @@ class ChangePassword extends Component {
         method: "post",
         url: "http://localhost:8000/api/change-password",
         data: formData,
-      }).then(() => {
-        Swal.fire("Success", "Password change successfully.", "success");
-        this.props.history.push("/");
-      }).catch(() =>{
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Some thing wrong",
-        });
       })
+        .then(() => {
+          Swal.fire("Success", "Password change successfully.", "success");
+          this.props.history.push("/");
+        })
+        .catch(() => {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Some thing wrong",
+          });
+        });
     } else {
       this.validator.showMessages();
       this.forceUpdate();
@@ -69,10 +70,10 @@ class ChangePassword extends Component {
           <Helmet>
             <title>Update Password</title>
           </Helmet>
+          <div className="div-logo">
+            <Image src="/images/logo.png" size="medium" />
+          </div>
           <div className="change-password-container">
-            <div className="div-logo">
-              <Image src="/images/logo.png" size="medium" />
-            </div>
             <Form onSubmit={this.handleSubmit} className="form-normal">
               <Form.Field className="div-field">
                 <label>Current Password</label>
@@ -83,12 +84,9 @@ class ChangePassword extends Component {
                   value={password}
                 />
 
-                {this.validator.message(
-                  "password",
-                  password,
-                  "required",
-                  { className: "text-danger validation" }
-                )}
+                {this.validator.message("password", password, "required", {
+                  className: "text-danger validation",
+                })}
               </Form.Field>
 
               <Form.Field className="div-field">

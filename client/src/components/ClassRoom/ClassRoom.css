@@ -1,0 +1,16 @@
+.add-class-room{
+   /* float: right;
+   margin: 100px 26px 0 0; */
+}
+.table-class-room{
+    position: absolute;
+    width: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 30px;
+    top: 26%;
+    background-color: #fff;
+}
+.div-rank-board{
+    height: 100%;
+}

@@ -12,19 +12,23 @@ class RoleController extends Controller
 {
     function roles()
     {
-        $roles = Role::Select('role_id', 'role_name')->get();
-        $screens = Screen::all();
-        $role =  Role::first();
-        $data = $role->screens()->get();
+        try {
+            $roles = Role::Select('role_id', 'role_name')->get();
+            $screens = Screen::all();
+            $role =  Role::first();
+            $data = $role->screens()->get(); 
 
-        return response()->json(
-            [
-                'roles' => $roles,
-                'data' => $data,
-                'screen' => $screens,
-                'role' => $role
-            ]
-        );
+            return response()->json(
+                [
+                    'roles' => $roles,
+                    'data' => $data,
+                    'screen' => $screens,
+                    'role' => $role
+                ]
+            );
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage(), 'error' => $e], 401);
+        }
     }
 
     function getRole($id)
@@ -82,7 +86,7 @@ class RoleController extends Controller
     function removeRoleAccess(Request $request)
     {
 
-        $role_access = RoleAccess::where(['role_id'=> $request->query('role_id'), 'screen_id'=> $request->query('screen_id')])->delete();
+        $role_access = RoleAccess::where(['role_id' => $request->query('role_id'), 'screen_id' => $request->query('screen_id')])->delete();
         return response()->json(
             [
                 "status" => 200,

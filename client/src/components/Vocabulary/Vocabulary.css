@@ -14,3 +14,15 @@
 .select__control.css-1s2u09g-control{
     border-color: rgba(34,36,38,.15)!important;
 }
+.voc-parent{
+    position: relative;
+}
+.voc-child{
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -25px 0 0 -25px;
+    text-align: center;
+}

@@ -1,7 +1,10 @@
-.div-rank-board {
+/* .div-rank-board {
   width: 100%;
   height: 100%;
   position: relative;
+} */
+.div-rank{
+  height: 100%;
 }
 
 .table-rank-board {
@@ -10,11 +13,19 @@
   left: 50%;
   transform: translateX(-50%);
   padding: 30px;
-  top: 10%;
 }
 
 #search-rank-board {
   color: white;
   background-color: #db2828;
   border: 1px solid #db2828;
+}
+.table-rank-board>.MuiPaper-root{
+  box-shadow: none!important;
+}
+tbody>tr>td{
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

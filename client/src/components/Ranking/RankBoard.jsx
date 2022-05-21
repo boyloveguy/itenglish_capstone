@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 import axios from "axios";
 import "./RankBoard.css";
 import MaterialTable from "@material-table/core";
-import { Loader } from "semantic-ui-react";
+import { Container, Loader } from "semantic-ui-react";
 
 const columns = [
   { title: "Username", field: "user_name" },
@@ -52,21 +52,61 @@ class RankBoard extends Component {
   render() {
     const { isLoading } = this.state;
     return (
-      <div className="div-rank-board">
+      <div className="div-rank pad-top-150">
         <Helmet>
-          <title>ITEnglish | Home</title>
+          <title>ITEnglish | Exams and tests</title>
         </Helmet>
-        <MenuDiv />
-        <div className="table-rank-board">
-          <Loader active={isLoading} size="big" />
+        <Loader active={isLoading} size="big" />
+        <MenuDiv activeItem={this.state.activeItem} />
+        <Container className="div_exam">
+          <div className="table-rank-board">
           <MaterialTable
-            title="Rank Board"
-            columns={columns}
-            data={this.state.data}
-          />
+              title="Rank Board"
+              columns={columns}
+              data={this.state.data}
+            />
+          </div>
+        </Container>
+        <div
+          style={{
+            textAlign: "center",
+            paddingTop: 80,
+            paddingBottom: 20,
+          }}
+        >
+          <p>© ITEnglish Copyright 2022</p>
         </div>
       </div>
     );
+
+
+    // return (
+    //   <div className="pad-top-150">
+    //     <Helmet>
+    //       <title>ITEnglish | Home</title>
+    //     </Helmet>
+    //     <MenuDiv />
+    //     <Container className="div-rank">
+    //       <div className="table-rank-board">
+    //         <Loader active={isLoading} size="big" />
+    //         <MaterialTable
+    //           title="Rank Board"
+    //           columns={columns}
+    //           data={this.state.data}
+    //         />
+    //       </div>
+    //     </Container>
+    //     <div
+    //         style={{
+    //             textAlign: 'center',
+    //             paddingTop: 80,
+    //             paddingBottom: 20
+    //         }}
+    //     >
+    //         <p>© ITEnglish Copyright 2022</p>
+    //     </div>
+    //   </div>
+    // );
   }
 }
 

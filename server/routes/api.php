@@ -12,16 +12,18 @@ use App\Http\Controllers\Api\RoleController;
 
 use App\Http\Controllers\Api\VocabularyController;
 
+
 Route::post('login', [AuthController::class, 'store']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('change-password', [AuthController::class, 'changePassword']);
     Route::get('user', [UserController::class, 'show']);
     Route::put('user', [UserController::class, 'update']);
+    // Route::get('roles', [RoleController::class, 'roles']);
 });
 
-Route::get('roles', [RoleController::class, 'roles'])->middleware(['auth:sanctum', 'ability:admin']);
-// Route::get('roles', [RoleController::class, 'roles']);
+
+Route::get('roles', [RoleController::class, 'roles'])->middleware(['auth:sanctum', 'ability']);
 Route::post('forgot-password', [PasswordResetLinkController::class, 'forgotPassword']);
 Route::post('reset-password', [PasswordResetLinkController::class, 'resetPassword']);
 

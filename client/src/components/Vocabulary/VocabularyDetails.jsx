@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import Cookies from 'universal-cookie';
 import Select, { StylesConfig } from 'react-select';
 import AddRemoveInputField from './AddRemoveInputField';
+import AddRemoveNew from './AddRemoveNew';
 
 const cookies = new Cookies();
 
@@ -27,13 +28,17 @@ const VocabularyDetails = (props) => {
         voc_id: voc_id,
         voc_examples: [],
         voc_meanings: [],
+        default_value: [{
+            id: 0,
+            vocValue: '',
+        }]
     });
 
     const url = "http://localhost:8000/api/get_info";
 
     useEffect(() => {
-        setTimeout(
-            () => {
+        // setTimeout(
+        //     () => {
                 fetch(url, {
                     method: 'POST',
                     headers: {
@@ -73,9 +78,9 @@ const VocabularyDetails = (props) => {
                             isLoading: false
                         }))
                     });
-            }, 
-            3000
-        );        
+        //     }, 
+        //     4000
+        // );        
     }, []);
 
     const handleChange = (e) => {
@@ -130,7 +135,11 @@ const VocabularyDetails = (props) => {
         let list_meaning = [];
         const list = document.getElementsByClassName(type);
         for(let i = 0; i < list.length; i++){
-            list_meaning.push(list[i].children.vocValue.value);
+            console.log(list[i].children);
+            list_meaning.push({
+                value: list[i].children.vocValue.value,
+                id: list[i].children.vocValue.id
+            });
         }
         return list_meaning;
     }
@@ -206,7 +215,9 @@ const VocabularyDetails = (props) => {
                                             parts_of_speech: [],
                                             spelling: "",
                                             majors: [],
-                                            voc_id: 0
+                                            voc_id: 0,
+                                            voc_examples: [],
+                                            voc_meanings: [],
                                         }));
                                     }
                                 })
@@ -397,10 +408,47 @@ const VocabularyDetails = (props) => {
                             value={vocDetails.majors}
                         />
                         <label style={{ fontWeight: 700, color: "rgba(0,0,0,.87)" }}>Meanings</label>
-                        <AddRemoveInputField className="meaning" nameClass="vocValue" placeholder='Infomation of vocabulary...' value={vocDetails.voc_meanings}/>
-                        <label style={{ fontWeight: 700, color: "rgba(0,0,0,.87)" , marginTop: 15}}>Examples
-                        </label>
-                        <AddRemoveInputField className="example" nameClass="vocValue" placeholder='Example of vocabulary...' value={vocDetails.voc_examples}/>
+                        {
+                            vocDetails.voc_meanings.length !== 0 ?
+                            (
+                                <AddRemoveInputField 
+                                    className="meaning" 
+                                    nameClass="vocValue" 
+                                    placeholder='Infomation of vocabulary...' 
+                                    value={vocDetails.voc_meanings}
+                                />
+                            )
+                            :
+                            (
+                                <AddRemoveNew 
+                                    className="meaning" 
+                                    nameClass="vocValue" 
+                                    placeholder='Infomation of vocabulary...' 
+                                    value={vocDetails.default_value}
+                                />
+                            )
+                        }                        
+                        <label style={{ fontWeight: 700, color: "rgba(0,0,0,.87)" , marginTop: 15}}>Examples</label>
+                        {
+                            vocDetails.voc_examples.length !== 0 ?
+                            (
+                                <AddRemoveInputField 
+                                    className="example" 
+                                    nameClass="vocValue" 
+                                    placeholder='Example of vocabulary...' 
+                                    value={vocDetails.voc_examples}
+                                />
+                            )
+                            :
+                            (
+                                <AddRemoveNew 
+                                    className="example default" 
+                                    nameClass="vocValue" 
+                                    placeholder='Example of vocabulary...' 
+                                    value={vocDetails.default_value}
+                                />
+                            )
+                        }                         
                     </div>
                     <div style={{ textAlign: 'center' }}>
                         <Button

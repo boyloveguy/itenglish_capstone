@@ -16,7 +16,7 @@ class UserController extends Controller
 				'exam_points as total_exam' => function ($query) {
 					$query->select(DB::raw('count(exam_id)'));
 				}, 'exam_points as ranking' => function ($query) {
-					$query->select(DB::raw('round(sum(point)/count(exam_id)*100)'));
+					$query->select(DB::raw('round(sum(point))'));
 				}, 'exam_points as total_score' => function ($query) {
 					$query->select(DB::raw('round(sum(point))'));
 				}
@@ -39,6 +39,8 @@ class UserController extends Controller
 		$total_point = $user->exam_points()->sum('point');
 		$total_exam = $user->exam_points()->count('exam_id');
 		$ranking = $total_exam == 0 ? 0 : ($total_point / $total_exam) * 100;
+		$role_id = $user->role()->first()->role_id;
+		$role_access = $user->role->role_access;
 		
 
 		return response()->json([
@@ -46,7 +48,9 @@ class UserController extends Controller
 			'user' => $user,
 			'ranking' => round($ranking),
 			'total_exam' => $total_exam,
-			'total_point' => $total_point
+			'total_point' => $total_point,
+			'role' => $role_id,
+			'role_access' => $role_access
 		]);
 	}
 
@@ -58,7 +62,7 @@ class UserController extends Controller
 			'user_avatar' => 'required',
 			'user_avatar.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
 		]);
-		
+
 		$user = auth()->user();
 		$user->user_fname = $request->user_fname;
 		$user->user_lname = $request->user_lname;
